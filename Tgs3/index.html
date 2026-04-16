@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Pacifico&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <title>Format</title>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>Welcome to My Calculator</h1>
+        </div>
+    </header>
+    <main>
+        <div class="body-container">
+            <div class="body">
+                <div class="left">
+                    <h1>Kalkulator Sederhana</h1>
+                    <input type="text" id="display" readonly><br><br>
+                    <label class="label">Angka 1</label><br>
+                    <input class="input" type="text" id="angka1"><br><br>
+                    <label class="label">Angka 2</label><br>
+                    <input class="input" type="text" id="angka2"><br><br>
+                    <button class="calc" onclick="hitung('+')">+</button>
+                    <button class="calc" onclick="hitung('-')">-</button>
+                    <button class="calc" onclick="hitung('*')">*</button>
+                    <button class="calc" onclick="hitung('/')">/</button>
+                </div>
+                <div class="right">
+                    <h2>Welcome, User!</h2>
+                    <button class="user" onclick="verifyUser()">Verify User</button><br><br>
+                    <div id="hello"></div><br>
+                    <div id="Paragraph"></div><br>
+                    <button class="mode" onclick="toggleDarkMode()">Switch Mode</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="info">
+            <p class="copy">Copyright 2026 Calculator</p>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+
+</html>

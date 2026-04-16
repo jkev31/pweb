@@ -1,0 +1,63 @@
+body {
+    background-color: rgb(255, 255, 255);
+}
+
+.paraph {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+.login-box {
+    width: 300px;
+    margin: auto;
+    border: 2px solid;
+    border-radius: 20px;
+    padding: 30px;
+}
+
+.input-container {
+    width: 93%;
+    padding: 10px;
+    background: rgb(255, 255, 255);
+    color: black;
+    border: 2px solid black;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.button-login {
+    width: 100%;
+    padding: 20px;
+    background: red;
+    color: white;
+    border-radius: 5px;
+    border: 0px;
+    font-size: 20px;
+}
+
+.logo {
+    width: 200px;
+    display: block;
+    margin: auto;
+}
+
+.button-google {
+    width: 100%;
+    padding: 20px;
+    background: rgb(216, 216, 216);
+    color: rgb(0, 0, 0);
+    border-radius: 5px;
+    border: 0px;
+    font-size: 20px;
+}
+
+p {
+    text-align: center;
+}

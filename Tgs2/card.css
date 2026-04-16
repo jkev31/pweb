@@ -1,0 +1,62 @@
+body {
+    background-image: url("night-sky-stars-ocean-horizon-scenery-lighthouse-anime-4K-81.jpg");
+    background-size: cover;
+}
+
+div p {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+}
+
+h2 {
+    font-family: 'Cinzel', sans-serif;
+    font-size: 22px;
+}
+
+h3 {
+    font-family: 'Marcellus', sans-serif;
+    font-size: 20px;
+}
+
+.card-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+.highlight {
+    background-color: rgb(117, 172, 255);
+}
+
+.card {
+    display: flex;
+    width: 600px;
+    aspect-ratio: 350 / 220;
+    border-radius: 15px;
+    overflow: hidden;
+    background: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    box-shadow: 10px 10px 10px 0px rgba(255, 255, 255, 0.3);
+}
+
+
+.left {
+    flex: 1;
+    padding: 20px;
+}
+
+
+.right {
+    flex: 1;
+    background: linear-gradient(45deg, white, rgb(0, 102, 255));
+    text-align: center;
+    padding: 20px;
+}
+
+.right img {
+    width: 180px;
+    height: 180px;
+    margin-bottom: 16px;
+    border-radius: 50%;
+}

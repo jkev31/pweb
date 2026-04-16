@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>HTML Forms</title>
+</head>
+
+<body>
+
+    <h1>Contact Form</h1>
+
+    <form action="#" method="post">
+
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="departemen">Departemen: (FTI)</label><br>
+        <input type="departemen" id="departemen" name="departemen" required><br><br>
+
+        <label for="subject">Subject:</label><br>
+        <select id="subject" name="subject">
+            <option value="si">Sistem Informasi</option>
+            <option value="tk">Teknik Komputer</option>
+            <option value="pti">Pendidikan TI</option>
+        </select><br><br>
+
+        <label for="message">Message:</label><br>
+        <textarea id="message" name="message" rows="4" cols="50"></textarea><br><br>
+
+        <input type="submit" value="Send Message">
+
+    </form>
+
+</body>
+
+</html>
