@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penjualan</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+
+<!-- Tabs -->
+<ul class="nav nav-tabs" style="background-color:#1a1a2e;">
+    <li class="nav-item">
+        <a class="nav-link active" style="background-color:#0d6efd; color:white; border-radius:0;" href="#">Penjualan</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color:white;" href="#">Pembelian</a>
+    </li>
+</ul>
+
+<div class="container mt-3">
+
+    <!-- Header Form -->
+    <div class="row mb-2">
+        <div class="col-sm-3">
+            <div class="d-flex align-items-center mb-2">
+                <label class="me-2" style="width:90px;">Tanggal:</label>
+                <input type="date" class="form-control" id="tanggal">
+            </div>
+            <div class="d-flex align-items-center mb-2">
+                <label class="me-2" style="width:90px;">Konsumen:</label>
+                <input type="text" class="form-control" id="konsumen">
+            </div>
+            <div class="d-flex align-items-center mb-2">
+                <label class="me-2" style="width:90px;">No. Telp:</label>
+                <input type="text" class="form-control" id="notelp">
+            </div>
+            <div class="d-flex align-items-start mb-2">
+                <label class="me-2" style="width:90px;">Keterangan:</label>
+                <textarea class="form-control" id="keterangan" rows="4"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Item Input Row -->
+    <div class="row mb-3 justify-content-center">
+        <div class="col-sm-2">
+            <label>Kode</label>
+            <input type="text" class="form-control" id="kode">
+        </div>
+        <div class="col-sm-3">
+            <label>Nama</label>
+            <input type="text" class="form-control" id="nama">
+        </div>
+        <div class="col-sm-2">
+            <label>Satuan</label>
+            <input type="text" class="form-control" id="satuan">
+        </div>
+        <div class="col-sm-2">
+            <label>Harga</label>
+            <input type="number" class="form-control" id="harga">
+        </div>
+        <div class="col-sm-1">
+            <label>Qty</label>
+            <input type="number" class="form-control" id="qty" min="1" value="1">
+        </div>
+        <div class="col-sm-1 d-flex align-items-end">
+            <button id="tambah" class="btn btn-primary">Tambah</button>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <table class="table table-bordered" id="tbldata">
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Kode</th>
+                <th>Nama</th>
+                <th>Satuan</th>
+                <th>Harga</th>
+                <th>Qty</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4"></td>
+                <td colspan="2"><strong>Total</strong></td>
+                <td id="tot">0</td>
+            </tr>
+            <tr>
+                <td colspan="4"></td>
+                <td colspan="2"><strong>Diskon</strong></td>
+                <td><input type="number" class="form-control form-control-sm" id="diskon" value="0"></td>
+            </tr>
+            <tr>
+                <td colspan="4"></td>
+                <td colspan="2"><strong>Grandtotal</strong></td>
+                <td id="grandtotal">0</td>
+            </tr>
+            <tr>
+                <td colspan="4"></td>
+                <td colspan="2"><strong>Bayar</strong></td>
+                <td><input type="number" class="form-control form-control-sm" id="bayar" value="0"></td>
+            </tr>
+        </tfoot>
+    </table>
+
+</div>
+
+<script>
+    function hitungtotal() {
+        let total = 0;
+        $("#tbldata tbody tr").each(function () {
+            let subtotal = parseFloat($(this).find("td").eq(6).text()) || 0;
+            total += subtotal;
+        });
+        $("#tot").text(total);
+
+        let diskon = parseFloat($("#diskon").val()) || 0;
+        let grandtotal = total - diskon;
+        if (grandtotal < 0) grandtotal = 0;
+        $("#grandtotal").text(grandtotal);
+    }
+
+    $(document).ready(function () {
+
+        $("#tambah").click(function () {
+            let kode   = $("#kode").val().trim();
+            let nama   = $("#nama").val().trim();
+            let satuan = $("#satuan").val().trim();
+            let harga  = parseFloat($("#harga").val()) || 0;
+            let qty    = parseInt($("#qty").val()) || 1;
+
+            if (kode === "" || nama === "" || satuan === "" || harga === 0) {
+                alert("Lengkapi data item terlebih dahulu!");
+                return;
+            }
+
+            let subtotal = harga * qty;
+            let row = "<tr>" +
+                "<td><button class='btn btn-danger btn-sm hapus'>X</button></td>" +
+                "<td>" + kode + "</td>" +
+                "<td>" + nama + "</td>" +
+                "<td>" + satuan + "</td>" +
+                "<td>" + harga + "</td>" +
+                "<td>" + qty + "</td>" +
+                "<td>" + subtotal + "</td>" +
+                "</tr>";
+
+            $("#tbldata tbody").append(row);
+            hitungtotal();
+
+            // Clear item inputs
+            $("#kode").val("");
+            $("#nama").val("");
+            $("#satuan").val("");
+            $("#harga").val("");
+            $("#qty").val("1");
+        });
+
+        $("#tbldata").on("click", ".hapus", function () {
+            $(this).closest("tr").remove();
+            hitungtotal();
+        });
+
+        // Recalculate when diskon or bayar changes
+        $("#diskon").on("input", function () {
+            hitungtotal();
+        });
+
+    });
+</script>
+</body>
+</html>
