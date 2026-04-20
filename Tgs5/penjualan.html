@@ -13,15 +13,27 @@
 
 <body>
 
-    <!-- Tabs -->
-    <ul class="nav bg-dark">
-        <li class="nav-item">
-            <a class="nav-link px-4 py-2 bg-primary text-light" href="#">Penjualan</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link px-4 py-2 bg-dark text-light" href="#">Pembelian</a>
-        </li>
-    </ul>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand text-light" href="#">Simple POS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active bg-primary text-light" aria-current="page" href="#">Penjualan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="#">Pembelian</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
     <div class="container mt-3">
 
@@ -29,25 +41,25 @@
         <div class="mb-3">
             <div class="d-flex align-items-center mb-2">
                 <label class="col-sm-1 col-form-label">Tanggal:</label>
-                <div class="col-sm-3"> 
-                    <input type="date" class="form-control" id="tanggal"> 
+                <div class="col-sm-3">
+                    <input type="date" class="form-control" id="tanggal">
                 </div>
             </div>
             <div class="d-flex align-items-center mb-2">
                 <label class="col-sm-1 col-form-label">Konsumen:</label>
-                <div class="col-sm-3"> 
+                <div class="col-sm-3">
                     <input type="text" class="form-control" id="konsumen">
                 </div>
             </div>
             <div class="d-flex align-items-center mb-2">
                 <label class="col-sm-1 col-form-label">No. Telp:</label>
-                <div class="col-sm-3"> 
+                <div class="col-sm-3">
                     <input type="text" class="form-control" id="notelp">
                 </div>
             </div>
             <div class="d-flex align-items-start mb-2">
                 <label class="col-sm-1 col-form-label">Keterangan:</label>
-                <div class="col-sm-3"> 
+                <div class="col-sm-3">
                     <textarea class="form-control" id="keterangan"></textarea>
                 </div>
             </div>
@@ -63,16 +75,16 @@
         </div>
 
         <!-- Table -->
-        <table class="table table-bordered" id="tbldata">
+        <table class="table table-bordered border-dark table-hover table-striped" id="tbldata">
             <thead>
                 <tr>
-                    <th>Action</th>
-                    <th>Kode</th>
-                    <th>Nama</th>
-                    <th>Satuan</th>
-                    <th>Harga</th>
-                    <th>Qty</th>
-                    <th>Subtotal</th>
+                    <th class="bg-dark text-light">Action</th>
+                    <th class="bg-dark text-light">Kode</th>
+                    <th class="bg-dark text-light">Nama</th>
+                    <th class="bg-dark text-light">Satuan</th>
+                    <th class="bg-dark text-light">Harga</th>
+                    <th class="bg-dark text-light">Qty</th>
+                    <th class="bg-dark text-light">Subtotal</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -91,6 +103,16 @@
                     <td colspan="5"></td>
                     <td>Grandtotal</td>
                     <td id="grandtotal">0</td>
+                </tr>
+                <tr>
+                    <td colspan="5"></td>
+                    <td>Bayar</td>
+                    <td><input type="number" id="bayar" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td colspan="5"></td>
+                    <td>Kembali</td>
+                    <td id="kembali">0</td>
                 </tr>
             </tfoot>
         </table>
@@ -156,6 +178,13 @@
 
             let grandtotal = total - diskon;
             $("#grandtotal").text(grandtotal);
+
+            let bayar = parseFloat($("#bayar").val()) || 0;
+            let kembali = 0;
+            if (bayar >= grandtotal) {
+                kembali = bayar - grandtotal;
+            }
+            $("#kembali").text(kembali);
         }
 
         $(document).ready(function () {
@@ -235,9 +264,14 @@
                 hitungtotal();
             });
 
+            $("#bayar").on("input", function () {
+                hitungtotal();
+            });
+
         });
 
     </script>
 
 </body>
+
 </html>
