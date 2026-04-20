@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tgs 1 </title>
+</head>
+
+
+<!-- 
+    kalkulator sederhana dengan jquery
+    inputan berupa angka
+    button calc untuk menghitung
+    hasil ditampilkan di p dengan id hasil
+    jika input > 500, diskon 25%
+    jika input 100 - 500, diskon 20%
+    jika input 50 - 100, diskon 10%
+    jika input 0 - 50, diskon 5%
+    
+-->
+<body>
+    <h1>calculator</h1>
+    <label for="input">input</label><br>
+    <input id="input">
+    <button id="calc">calc</button><br>
+    <p id="hasil"></p>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#calc").click(function () {
+                let input = $("#input").val();
+                if (input > 500) {
+                    $("#hasil").text(input - (input * 0.25));
+                } else if (input >= 100 && input <= 500) {
+                    $("#hasil").text(input - (input * 0.2));
+                } else if (input >= 50 && input <= 100) {
+                    $("#hasil").text(input - (input * 0.1));
+                } else if (input >= 0 && input <= 50) {
+                    $("#hasil").text(input - (input * 0.05));
+                } else {
+                    $("#hasil").text("input tidak boleh kosong");
+                }
+                
+                
+            });
+        });
+    </script>
+</body>
+
+</html>

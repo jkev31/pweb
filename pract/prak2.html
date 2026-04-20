@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Biodata</title>
+    <!-- GOOGLE FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Pacifico&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background-image: url(night-scenery-anime-boy-riding-bicycle-sky-city-landscape-uhdpaper.com-8K-8.314.jpg);
+            transition: 0.3s;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .highlight{
+            font-family: 'Pacifico', cursive;
+        }
+
+        .highlight2{
+            font-family: 'Cinzel', serif;
+        }
+
+        .card {
+            width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(30deg, #f99797, #3bc1ff);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid black;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: #16b4fd;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ff5e5e;
+        }
+
+        .dark {
+            background-color: black;
+            color: white;
+            background-image: url(night-sky-stars-mountain-lake-landscape-scenery-uhdpaper.com-8K-4.773.jpg);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .dark .card {
+            background: linear-gradient(30deg, #000000, #1150ff);
+            box-shadow: 0 10px 20px rgb(255, 255, 255);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>
+        This is my card
+    </h1>
+    <div class="card">
+        
+        <img src="https://www.google.com/imgres?q=skirk%20profile&imgurl=https%3A%2F%2Fgensh.honeyhunterworld.com%2Fimg%2Fskirknew_114.webp&imgrefurl=https%3A%2F%2Fgensh.honeyhunterworld.com%2Fskirknew_114%2F%3Flang%3DID&docid=DcaNJQNQQaDDEM&tbnid=rNlJFB-4WG-jGM&vet=12ahUKEwje6-6J6LyTAxXrSmwGHW_DG6QQnPAOegQIGRAB..i&w=247&h=256&hcb=2&ved=2ahUKEwje6-6J6LyTAxXrSmwGHW_DG6QQnPAOegQIGRAB" alt="foto" id="foto">
+        <h2>Kevin</h2>
+        <p>24410100027</p>
+        <p>S1 Sistem Informasi</p>
+        <button onclick="tampilText()">Welcome</button>
+        <button onclick="toggleDarkMode()">Switch Mode</button>
+        <p id="output"></p>
+    </div>
+    <script>
+
+        function tampilText() {
+            let nama = prompt("Masukkan nama kamu:");
+
+            if (nama !== null && nama !== "") {
+                document.getElementById("output").innerHTML = "Halo, <span class='highlight'>" + nama + "!</span>" + "<br>" + "<span class='highlight2'>Ad Astra Abyssosque!</span>";
+            } else {
+                document.getElementById("output").innerHTML = "Nama tidak diisi.";
+            }
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark");
+            document.getElementById("foto").src = "https://www.google.com/imgres?q=skirk%20profile&imgurl=https%3A%2F%2Fgensh.honeyhunterworld.com%2Fimg%2Fskirknew_114.webp&imgrefurl=https%3A%2F%2Fgensh.honeyhunterworld.com%2Fskirknew_114%2F%3Flang%3DID&docid=DcaNJQNQQaDDEM&tbnid=rNlJFB-4WG-jGM&vet=12ahUKEwje6-6J6LyTAxXrSmwGHW_DG6QQnPAOegQIGRAB..i&w=247&h=256&hcb=2&ved=2ahUKEwje6-6J6LyTAxXrSmwGHW_DG6QQnPAOegQIGRAB"
+        }
+    </script>
+</body>
+
+</html>

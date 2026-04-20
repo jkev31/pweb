@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>doksli1</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<body>
+    <h2 id="judul">Daftar Buah</h2>
+    <p class="merah">Apel (Warna Merah)</p>
+    <p class="hijau">Melon (Warna Hijau)</p>
+    <p class="merah">Stroberi (Warna Merah)</p>
+    <button id="btnAksi">Klik Saya</button>
+    <input id="inputTeks">
+    <p id="hitung"></p>
+    <form id="myForm">
+        <label for="nama">Nama:</label>
+        <input type="text" id="nama" name="nama"><br><br>
+        <button type="submit">Kirim</button>
+    </form>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // 1. Mengubah semua paragraf saat halaman dimuat
+            $("p").css("font-family", "Arial");
+            // 2. Aksi spesifik pada Tombol (ID)
+            $("#btnAksi").click(function () {
+                alert("Color changed");
+                // 3. Mengubah semua yang berwarna merah saat tombol diklik
+                $(".merah").css("color", "red");
+            });
+
+            // 4. Penggunaan 'this' agar interaktif
+            $("p").mouseenter(function () {
+                // Saat mouse menyentuh paragraf, hanya paragraf 'ini' yang jadi tebal
+                $(this).css("font-weight", "bold");
+            });
+
+            $("p").mouseleave(function () {
+                // Saat mouse keluar, kembalikan ke normal
+                $(this).css("font-weight", "normal");
+            });
+
+            // Menghitung jumlah karakter yang diketik secara real-time
+            $("#inputTeks").keyup(function () {
+                let jumlah = $(this).val().length;
+                $("#hitung").text("Jumlah karakter: " + jumlah);
+            });
+
+            // Memberi warna latar saat tombol ditekan (keydown)
+            $("#inputTeks").keydown(function () {
+                $(this).css("background-color", "cyan");
+            });
+
+            // Memberi warna latar saat tombol ditekan (keydown)
+            $("#nama").keydown(function () {
+                $(this).css("background-color", "cyan");
+            });
+
+            // Memberi highlight saat input difokuskan
+            $("input").focus(function () {
+                $(this).css("border", "2px solid orange");
+            });
+
+            // Menampilkan pesan saat pilihan dropdown berubah
+            $("#pilih Buah").change(function () {
+                let buah = $(this).val();
+                alert("Anda memilih: " + buah);
+            });
+
+            // Mencegah form dikirim jika kosong
+            $("#myForm").submit(function (event) {
+                alert("Form dikirim!");
+                event.preventDefault();
+                if ($("#nama").val() == "") {
+                    alert("Nama tidak boleh kosong!");
+                    event.preventDefault(); // Menghentikan proses pengiriman form
+                }
+            });
+
+        });
+    </script>
+</body>
+
+</html>
