@@ -66,7 +66,7 @@
         </div>
 
         <!-- Input -->
-        <div class="d-flex gap-2 mb-3 flex-wrap">
+        <div class="d-flex gap-2 mb-3    flex-wrap">
             <input type="text" class="form-control w-auto" id="kode" placeholder="Kode" readonly>
             <input type="text" class="form-control w-auto" id="nama" placeholder="Nama" readonly>
             <input type="text" class="form-control w-auto" id="satuan" placeholder="Satuan" readonly>
@@ -92,7 +92,7 @@
                 <tr>
                     <td colspan="5"></td>
                     <td>Total</td>
-                    <td id="tot">0</td>
+                    <td id="total">0</td>
                 </tr>
                 <tr>
                     <td colspan="5"></td>
@@ -167,7 +167,7 @@
                 total += subtotal;
             });
 
-            $("#tot").text(total);
+            $("#total").text(total);
 
             let diskon = 0;
             if (total >= 100000) {
