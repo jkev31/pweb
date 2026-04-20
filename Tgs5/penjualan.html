@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Penjualan</title>
+    <title>Penjualan Navbar</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 
@@ -14,7 +16,7 @@
     <!-- Tabs -->
     <ul class="nav bg-dark">
         <li class="nav-item">
-            <a class="nav-link px-4 py-2 bg-primary text-light border-radius: 0;" href="#">Penjualan</a>
+            <a class="nav-link px-4 py-2 bg-primary text-light" href="#">Penjualan</a>
         </li>
         <li class="nav-item">
             <a class="nav-link px-4 py-2 bg-dark text-light" href="#">Pembelian</a>
@@ -23,62 +25,46 @@
 
     <div class="container mt-3">
 
-        <!-- Header Form -->
+        <!-- Header -->
         <div class="mb-3">
             <div class="d-flex align-items-center mb-2">
                 <label class="col-sm-1 col-form-label">Tanggal:</label>
-                <div class="col-sm-3">
-                    <input type="date" class="form-control" id="tanggal">
+                <div class="col-sm-3"> 
+                    <input type="date" class="form-control" id="tanggal"> 
                 </div>
             </div>
             <div class="d-flex align-items-center mb-2">
                 <label class="col-sm-1 col-form-label">Konsumen:</label>
-                <div class="col-sm-3">
+                <div class="col-sm-3"> 
                     <input type="text" class="form-control" id="konsumen">
                 </div>
             </div>
             <div class="d-flex align-items-center mb-2">
                 <label class="col-sm-1 col-form-label">No. Telp:</label>
-                <div class="col-sm-3">
+                <div class="col-sm-3"> 
                     <input type="text" class="form-control" id="notelp">
                 </div>
             </div>
             <div class="d-flex align-items-start mb-2">
                 <label class="col-sm-1 col-form-label">Keterangan:</label>
-                <div class="col-sm-3">
-                    <textarea class="form-control" id="keterangan" rows="4"></textarea>
+                <div class="col-sm-3"> 
+                    <textarea class="form-control" id="keterangan"></textarea>
                 </div>
             </div>
         </div>
 
-        <!-- Item Input Row -->
-        <div class="d-flex align-items-end gap-2 mb-3 flex-wrap">
-            <div>
-                <label class="form-label mb-1">Kode</label>
-                <input type="text" class="form-control w-auto" id="kode">
-            </div>
-            <div>
-                <label class="form-label mb-1">Nama</label>
-                <input type="text" class="form-control w-auto" id="nama">
-            </div>
-            <div>
-                <label class="form-label mb-1">Satuan</label>
-                <input type="text" class="form-control w-auto" id="satuan">
-            </div>
-            <div>
-                <label class="form-label mb-1">Harga</label>
-                <input type="number" class="form-control w-auto" id="harga">
-            </div>
-            <div>
-                <label class="form-label mb-1">Qty</label>
-                <input type="number" class="form-control w-auto" id="qty" min="1" value="1">
-            </div>
-            <button id="tambah" class="btn btn-primary col-sm-2">Tambah</button>
+        <!-- Input -->
+        <div class="d-flex gap-2 mb-3 flex-wrap">
+            <input type="text" class="form-control w-auto" id="kode" placeholder="Kode" readonly>
+            <input type="text" class="form-control w-auto" id="nama" placeholder="Nama" readonly>
+            <input type="text" class="form-control w-auto" id="satuan" placeholder="Satuan" readonly>
+            <input type="number" class="form-control w-auto" id="harga" placeholder="Harga" readonly>
+            <button id="tambah" class="btn btn-primary col-sm-1">Tambah</button>
         </div>
 
         <!-- Table -->
         <table class="table table-bordered" id="tbldata">
-            <thead class="table-light">
+            <thead>
                 <tr>
                     <th>Action</th>
                     <th>Kode</th>
@@ -90,93 +76,168 @@
                 </tr>
             </thead>
             <tbody></tbody>
-            <tfoot class="table-light">
+            <tfoot>
                 <tr>
-                    <td colspan="4"></td>
-                    <td colspan="2"><strong>Total</strong></td>
+                    <td colspan="5"></td>
+                    <td>Total</td>
                     <td id="tot">0</td>
                 </tr>
                 <tr>
-                    <td colspan="4"></td>
-                    <td colspan="2"><strong>Diskon</strong></td>
-                    <td><input type="number" class="form-control form-control-sm" id="diskon" value="0"></td>
+                    <td colspan="5"></td>
+                    <td>Diskon</td>
+                    <td><input type="number" id="diskon" class="form-control" readonly></td>
                 </tr>
                 <tr>
-                    <td colspan="4"></td>
-                    <td colspan="2"><strong>Grandtotal</strong></td>
+                    <td colspan="5"></td>
+                    <td>Grandtotal</td>
                     <td id="grandtotal">0</td>
-                </tr>
-                <tr>
-                    <td colspan="4"></td>
-                    <td colspan="2"><strong>Bayar</strong></td>
-                    <td><input type="number" class="form-control form-control-sm" id="bayar" value="0"></td>
                 </tr>
             </tfoot>
         </table>
 
     </div>
 
+    <!-- MODAL -->
+    <div class="modal fade" id="modalItem">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Pilih Item</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Kode</th>
+                                <th>Nama</th>
+                                <th>Harga</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listItem"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+
+        // DATA ITEM
+        let items = [
+            { kode: "Item1", nama: "Pensil", satuan: "PCS", harga: 2000 },
+            { kode: "Item2", nama: "Buku", satuan: "PCS", harga: 5000 },
+            { kode: "Item3", nama: "Penghapus", satuan: "PCS", harga: 1500 },
+            { kode: "Item4", nama: "Pulpen", satuan: "PCS", harga: 3000 }
+        ];
+
         function hitungtotal() {
             let total = 0;
+
             $("#tbldata tbody tr").each(function () {
-                let subtotal = parseFloat($(this).find("td").eq(6).text()) || 0;
+                let harga = parseFloat($(this).find(".harga").text()) || 0;
+                let qty = parseInt($(this).find(".qty").val()) || 1;
+
+                let subtotal = harga * qty;
+                $(this).find(".subtotal").text(subtotal);
+
                 total += subtotal;
             });
+
             $("#tot").text(total);
 
-            let diskon = parseFloat($("#diskon").val()) || 0;
+            let diskon = 0;
+            if (total >= 100000) {
+                diskon = total * 0.5;
+            }
+
+            $("#diskon").val(diskon);
+
             let grandtotal = total - diskon;
-            if (grandtotal < 0) grandtotal = 0;
             $("#grandtotal").text(grandtotal);
         }
 
         $(document).ready(function () {
 
-            $("#tambah").click(function () {
-                let kode = $("#kode").val().trim();
-                let nama = $("#nama").val().trim();
-                let satuan = $("#satuan").val().trim();
-                let harga = parseFloat($("#harga").val()) || 0;
-                let qty = parseInt($("#qty").val()) || 1;
+            // BUKA MODAL
+            $("#kode").click(function () {
+                let html = "";
 
-                if (kode === "" || nama === "" || satuan === "" || harga === 0) {
-                    alert("Lengkapi data item terlebih dahulu!");
+                items.forEach(item => {
+                    html += `<tr>
+                        <td>${item.kode}</td>
+                        <td>${item.nama}</td>
+                        <td>${item.harga}</td>
+                        <td>
+                            <button class="btn btn-success pilih"
+                                data-kode="${item.kode}"
+                                data-nama="${item.nama}"
+                                data-satuan="${item.satuan}"
+                                data-harga="${item.harga}">
+                                Pilih
+                            </button>
+                        </td>
+                    </tr>`;
+                });
+
+                $("#listItem").html(html);
+                new bootstrap.Modal(document.getElementById('modalItem')).show();
+            });
+
+            // PILIH ITEM
+            $("#listItem").on("click", ".pilih", function () {
+                $("#kode").val($(this).data("kode"));
+                $("#nama").val($(this).data("nama"));
+                $("#satuan").val($(this).data("satuan"));
+                $("#harga").val($(this).data("harga"));
+
+                $("#modalItem").modal("hide");
+            });
+
+            // TAMBAH KE TABEL
+            $("#tambah").click(function () {
+                let kode = $("#kode").val();
+                let nama = $("#nama").val();
+                let satuan = $("#satuan").val();
+                let harga = parseFloat($("#harga").val()) || 0;
+
+                if (kode === "") {
+                    alert("Pilih item dulu!");
                     return;
                 }
 
-                let subtotal = harga * qty;
-                let row = "<tr>" +
-                    "<td><button class='btn btn-danger btn-sm hapus'>X</button></td>" +
-                    "<td>" + kode + "</td>" +
-                    "<td>" + nama + "</td>" +
-                    "<td>" + satuan + "</td>" +
-                    "<td>" + harga + "</td>" +
-                    "<td>" + qty + "</td>" +
-                    "<td>" + subtotal + "</td>" +
-                    "</tr>";
+                let row = `<tr>
+                    <td><button class="btn btn-danger hapus">X</button></td>
+                    <td>${kode}</td>
+                    <td>${nama}</td>
+                    <td>${satuan}</td>
+                    <td class="harga">${harga}</td>
+                    <td><input type="number" class="form-control qty" value="1" min="1"></td>
+                    <td class="subtotal">${harga}</td>
+                </tr>`;
 
                 $("#tbldata tbody").append(row);
                 hitungtotal();
 
-                $("#kode").val("");
-                $("#nama").val("");
-                $("#satuan").val("");
-                $("#harga").val("");
-                $("#qty").val("1");
+                // reset input
+                $("#kode, #nama, #satuan, #harga").val("");
             });
 
+            // HAPUS
             $("#tbldata").on("click", ".hapus", function () {
                 $(this).closest("tr").remove();
                 hitungtotal();
             });
 
-            $("#diskon").on("input", function () {
+            // UPDATE QTY
+            $("#tbldata").on("input", ".qty", function () {
                 hitungtotal();
             });
 
         });
-    </script>
-</body>
 
+    </script>
+
+</body>
 </html>
