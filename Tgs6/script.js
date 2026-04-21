@@ -79,7 +79,7 @@
 
             });
 
-            // pilih item dari modal
+            // pilih item dari modal ke input form
             $("#listItem").on("click", ".pilih", function () { // klik button pilih utk menampilkan data items di input form, dan modal akan tertutup
                 $("#kode").val($(this).data("kode")); 
                 $("#nama").val($(this).data("nama"));
