@@ -35,45 +35,45 @@
         </div>
     </nav>
 
-    <div class="container mt-3">
+    <div class="container-fluid mt-3">
 
         <!-- Header -->
         <div class="mb-3">
             <div class="d-flex align-items-center mb-2">
                 <label class="col-sm-1 col-form-label">Tanggal:</label>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <input type="date" class="form-control" id="tanggal">
                 </div>
             </div>
             <div class="d-flex align-items-center mb-2">
                 <label class="col-sm-1 col-form-label">Konsumen:</label>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <input type="text" class="form-control" id="konsumen">
                 </div>
             </div>
             <div class="d-flex align-items-center mb-2">
                 <label class="col-sm-1 col-form-label">No. Telp:</label>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <input type="text" class="form-control" id="notelp">
                 </div>
             </div>
             <div class="d-flex align-items-start mb-2">
                 <label class="col-sm-1 col-form-label">Keterangan:</label>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <textarea class="form-control" id="keterangan"></textarea>
                 </div>
             </div>
         </div>
 
-        <!-- Input Row: Kode | Nama | Satuan | Harga | Qty | Subtotal | Tambah -->
+        <!-- Input Row -->
         <div class="d-flex gap-2 mb-3 flex-wrap align-items-center">
-            <input type="text"   class="form-control w-auto" id="kode"     placeholder="Kode"     readonly style="cursor:pointer;">
-            <input type="text"   class="form-control w-auto" id="nama"     placeholder="Nama"     readonly>
-            <input type="text"   class="form-control w-auto" id="satuan"   placeholder="Satuan"   readonly>
-            <input type="number" class="form-control w-auto" id="harga"    placeholder="Harga"    readonly>
-            <input type="number" class="form-control w-auto" id="qty"      placeholder="Qty"      min="1" value="" style="width:80px;">
-            <input type="number" class="form-control w-auto" id="subtotal_preview" placeholder="Subtotal" readonly style="width:120px; background:#f8f9fa;">
-            <button id="tambah" class="btn btn-primary">Tambah</button>
+            <input type="text" class="form-control w-auto" id="kode" placeholder="Kode" readonly>
+            <input type="text" class="form-control w-auto" id="nama" placeholder="Nama" readonly>
+            <input type="text" class="form-control w-auto" id="satuan" placeholder="Satuan" readonly>
+            <input type="number" class="form-control w-auto" id="harga" placeholder="Harga" readonly>
+            <input type="number" class="form-control w-auto" id="qty" placeholder="Qty" min="1" value="">
+            <input type="number" class="form-control w-auto bg-body-secondary" id="subtotal_preview" placeholder="Subtotal" readonly>
+            <button id="tambah" class="btn btn-primary col-sm-1">Tambah</button>
         </div>
 
         <!-- Table -->
@@ -101,7 +101,7 @@
                     <td>
                         Diskon
                         <input type="number" id="diskon_persen" class="form-control form-control-sm mt-1"
-                            placeholder="%" min="0" max="100" style="width:70px; display:inline-block;">
+                            placeholder="0" min="0" max="100" style="width:70px; display:inline-block;">
                         <span class="text-muted">%</span>
                     </td>
                     <td>
@@ -157,10 +157,10 @@
 
         // DATA ITEM
         let items = [
-            { kode: "Item1", nama: "Pensil",    satuan: "PCS", harga: 2000 },
-            { kode: "Item2", nama: "Buku",      satuan: "PCS", harga: 5000 },
+            { kode: "Item1", nama: "Pensil", satuan: "PCS", harga: 2000 },
+            { kode: "Item2", nama: "Buku", satuan: "PCS", harga: 5000 },
             { kode: "Item3", nama: "Penghapus", satuan: "PCS", harga: 1500 },
-            { kode: "Item4", nama: "Pulpen",    satuan: "PCS", harga: 3000 }
+            { kode: "Item4", nama: "Pulpen", satuan: "PCS", harga: 3000 }
         ];
 
         function hitungtotal() {
@@ -170,24 +170,24 @@
                 let harga    = parseFloat($(this).find(".harga").text()) || 0;
                 let qty      = parseInt($(this).find(".qty").text()) || 1;
                 let subtotal = harga * qty;
-                $(this).find(".subtotal").text(subtotal);
+                $(this).find(".subtotal").text("Rp " + subtotal);
                 total += subtotal;
             });
 
-            $("#total").text(total);
+            $("#total").text("Rp " + total);
 
             // Diskon dari input % user
             let persen     = parseFloat($("#diskon_persen").val()) || 0;
             let nominal    = Math.round(total * persen / 100);
-            $("#diskon_nominal").text(nominal);
+            $("#diskon_nominal").text("Rp " + nominal);
 
             let grandtotal = total - nominal;
             if (grandtotal < 0) grandtotal = 0;
-            $("#grandtotal").text(grandtotal);
+            $("#grandtotal").text("Rp " + grandtotal);
 
             let bayar    = parseFloat($("#bayar").val()) || 0;
             let kembali  = bayar >= grandtotal ? bayar - grandtotal : 0;
-            $("#kembali").text(kembali);
+            $("#kembali").text("Rp " + kembali);
         }
 
         function updateSubtotalPreview() {
