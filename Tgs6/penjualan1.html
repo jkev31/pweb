@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Penjualan Navbar</title>
+    <title>Simple POS Navbar</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
@@ -176,7 +176,7 @@
 
             $("#total").text("Rp " + total);
 
-            // Diskon dari input % user
+            // diskon input user (%)
             let persen     = parseFloat($("#diskon_persen").val()) || 0;
             let nominal    = Math.round(total * persen / 100);
             $("#diskon_nominal").text("Rp " + nominal);
@@ -198,7 +198,7 @@
 
         $(document).ready(function () {
 
-            // BUKA MODAL saat klik input Kode
+            // buka modal saat klik input kode
             $("#kode").on("click", function () {
                 let html = "";
                 items.forEach(item => {
@@ -221,7 +221,7 @@
                 new bootstrap.Modal(document.getElementById('modalItem')).show();
             });
 
-            // PILIH ITEM dari modal
+            // pilih item dari modal
             $("#listItem").on("click", ".pilih", function () {
                 $("#kode").val($(this).data("kode"));
                 $("#nama").val($(this).data("nama"));
@@ -232,12 +232,12 @@
                 $("#modalItem").modal("hide");
             });
 
-            // Update subtotal preview saat qty diketik
+            // update subtotal preview
             $("#qty").on("input", function () {
                 updateSubtotalPreview();
             });
 
-            // TAMBAH KE TABEL
+            // tambah ke tabel
             $("#tambah").on("click", function () {
                 let kode    = $("#kode").val().trim();
                 let nama    = $("#nama").val().trim();
@@ -267,18 +267,18 @@
                 $("#kode, #nama, #satuan, #harga, #qty, #subtotal_preview").val("");
             });
 
-            // HAPUS baris
+            // delete row
             $("#tbldata").on("click", ".hapus", function () {
                 $(this).closest("tr").remove();
                 hitungtotal();
             });
 
-            // Diskon % berubah
+            // ubah diskon %
             $("#diskon_persen").on("input", function () {
                 hitungtotal();
             });
 
-            // Bayar berubah
+            // bayar berubah
             $("#bayar").on("input", function () {
                 hitungtotal();
             });
