@@ -48,22 +48,22 @@
             <div class="d-flex align-items-center mb-2">
                 <label class="col-sm-1 col-form-label">Konsumen:</label>
                 <div class="col-sm-2">
-                    <input type="text" class="form-control" id="konsumen">
+                    <input type="text" class="form-control" id="konsumen" placeholder="Nama konsumen">
                 </div>
             </div>
             <div class="d-flex align-items-center mb-2">
                 <label class="col-sm-1 col-form-label">No. Telp:</label>
                 <div class="col-sm-2">
-                    <input type="text" class="form-control" id="notelp">
+                    <input type="text" class="form-control" id="notelp" placeholder="08...">
                 </div>
             </div>
             <div class="d-flex align-items-start mb-2">
                 <label class="col-sm-1 col-form-label">Keterangan:</label>
                 <div class="col-sm-2">
-                    <textarea class="form-control" id="keterangan"></textarea>
+                    <textarea class="form-control" id="keterangan" placeholder="Masukkan keterangan"></textarea>
                 </div>
             </div>
-        </div>
+        </div><br>
 
         <!-- Input Row -->
         <div class="d-flex gap-2 mb-3 flex-wrap align-items-center">
@@ -116,11 +116,11 @@
                 <tr>
                     <td colspan="5"></td>
                     <td>Bayar</td>
-                    <td><input type="number" id="bayar" class="form-control"></td>
+                    <td class="d-flex align-items-center gap-2"><span>Rp</span><input type="number" id="bayar" class="form-control"></td>
                 </tr>
                 <tr>
                     <td colspan="5"></td>
-                    <td>Kembali</td>
+                    <td>Kembalian</td>
                     <td id="kembali">0</td>
                 </tr>
             </tfoot>
