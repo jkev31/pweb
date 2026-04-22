@@ -78,6 +78,7 @@
     </div><br> <!-- Header form selesai -->
 
 
+    <!-- Input Row -->
     <div class="row mb-3 mt-3">
       <div class="col-sm-2">
         <label>kode</label>
@@ -105,6 +106,8 @@
       </div>
     </div>
 
+
+    <!-- Table -->
     <table class="table table-bordered" id="tbldata">
       <thead>
         <tr>
@@ -154,6 +157,8 @@
       </tfoot>
     </table>
   </div>
+
+
 
   <!-- The Modal -->
   <div class="modal" id="masteritem">
@@ -210,19 +215,17 @@
     </div>
   </div>
 
-  <script>
 
-    // ── fungsi asli latihanjq03 (tidak diubah) ──
+
+  <script>
     function tambahtabel(kode, nama, harga) {
       $("#kode").val(kode);
       $("#nama").val(nama);
       $("#harga").val(harga);
-      // reset qty & preview saat item baru dipilih
       $("#qty").val("").focus();
       $("#subtotal_preview").val("");
     }
 
-    // ── DIPERBARUI: hitungtotal() sesuai pola script.js ──
     function hitungtotal() {
       let total = 0;
 
@@ -252,7 +255,7 @@
       $("#kembali").text("Rp " + kembali);
     }
 
-    // ── TAMBAHAN: update subtotal preview (sesuai script.js) ──
+    // update subtotal preview 
     function updateSubtotalPreview() {
       let harga = parseFloat($("#harga").val()) || 0;
       let qty = parseInt($("#qty").val()) || 0;
@@ -261,12 +264,12 @@
 
     $(document).ready(function () {
 
-      // ── TAMBAHAN: update preview saat qty diketik ──
+      // update preview saat qty diketik 
       $("#qty").on("input", function () {
         updateSubtotalPreview();
       });
 
-      // ── tombol tambah (diperbarui: sekarang include qty & subtotal) ──
+      // tombol tambah
       $("#tambah").click(function () {
         let x = $("#kode").val().trim();
         let y = $("#nama").val().trim();
@@ -294,13 +297,13 @@
         $("#kode, #nama, #harga, #qty, #subtotal_preview").val("");
       });
 
-      // ── tombol hapus (tidak diubah) ──
+      // tombol hapus
       $("#tbldata").on("click", ".hapus", function () {
         $(this).closest('tr').remove();
         hitungtotal();
       });
 
-      // ── TAMBAHAN: event diskon & bayar (sesuai script.js) ──
+
       $("#diskon_persen").on("input", function () {
         hitungtotal();
       });
@@ -311,6 +314,7 @@
 
     });
   </script>
+  
 </body>
 
 </html>
