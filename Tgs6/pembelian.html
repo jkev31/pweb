@@ -124,7 +124,7 @@
         <tr>
           <td colspan="4"></td>
           <td>Total</td>
-          <td id="tot">0</td>
+          <td>Rp <span id="tot">0</span></td>
         </tr>
         <tr>
           <td colspan="4"></td>
@@ -134,12 +134,12 @@
               max="100" style="width:70px; display:inline-block;">
             <span class="text-muted">%</span>
           </td>
-          <td><span id="diskon_nominal">0</span></td>
+          <td>Rp <span id="diskon_nominal">0</span></td>
         </tr>
         <tr>
           <td colspan="4"></td>
           <td>Grandtotal</td>
-          <td id="grandtotal">0</td>
+          <td>Rp <span id="grandtotal">0</span></td>
         </tr>
         <tr>
           <td colspan="4"></td>
@@ -152,10 +152,15 @@
         <tr>
           <td colspan="4"></td>
           <td>Kembalian</td>
-          <td id="kembali">0</td>
+          <td>Rp <span id="kembali">0</span></td>
         </tr>
       </tfoot>
     </table>
+    <div class="row mb-3 mt-3 d-flex justify-content-end">
+      <div class="col-sm-2">
+        <button id="order" class="btn btn-success w-100">order</button>
+      </div>
+    </div>
   </div>
 
 
@@ -238,22 +243,22 @@
         console.log(total);
       });
 
-      $("#tot").html("<b>Rp " + total + "</b>");
+      $("#tot").html("<b>" + total + "</b>");
 
       // diskon
       let persen = parseFloat($("#diskon_persen").val()) || 0;
       let nominal = Math.round(total * persen / 100);
-      $("#diskon_nominal").text("Rp " + nominal);
+      $("#diskon_nominal").text(nominal);
 
       // grandtotal
       let grandtotal = total - nominal;
       if (grandtotal < 0) grandtotal = 0;
-      $("#grandtotal").text("Rp " + grandtotal);
+      $("#grandtotal").text(grandtotal);
 
       // kembalian
       let bayar = parseFloat($("#bayar").val()) || 0;
       let kembali = bayar >= grandtotal ? bayar - grandtotal : 0;
-      $("#kembali").text("Rp " + kembali);
+      $("#kembali").text(kembali);
     }
 
     // update subtotal preview 
@@ -311,6 +316,46 @@
 
       $("#bayar").on("input", function () {
         hitungtotal();
+      });
+
+
+
+
+      $("#order").click(function () {
+        let grandtotal = parseFloat($("#grandtotal").text()) || 0;
+        let bayar = parseFloat($("#bayar").val()) || 0;
+        let kembali = parseFloat($("#kembali").text()) || 0;
+
+        if ($("#bayar").val() === "") {
+          alert("Isi bayar terlebih dahulu!"); // jika belum byr, keluar
+          return;
+
+        } else if (bayar < grandtotal) {
+          alert("Bayar tidak cukup!"); // jika uang kurang, keluar
+          return;
+
+        } else if (bayar === grandtotal) {
+          alert("Terima kasih!\n Pembayaran berhasil!\n Uang pas!"); // jika uang pas, keluar
+          // reset input row
+          $("#kode, #nama, #harga, #qty, #subtotal_preview").val("");
+          // clear table
+          $("#tbldata tbody").empty();
+          hitungtotal();
+          $("#bayar").val("");
+          $("#kembali").text("0");
+
+        } else {
+          let kembali = bayar - grandtotal;
+          alert("Terima kasih!\n Pembayaran berhasil!\n Kembalian : Rp " + kembali); // jika uang lebih, keluar
+          // reset input row
+          $("#kode, #nama, #harga, #qty, #subtotal_preview").val("");
+          // clear table
+          $("#tbldata tbody").empty();
+          hitungtotal();
+          $("#bayar").val("");
+          $("#kembali").text("0");
+        }
+
       });
 
     });
