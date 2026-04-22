@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <h3>Berhitung</h3>
+    <div class="row mb-3 mt-3">
+      <div class="col-sm-2">
+        <label>kode</label>
+        <input type="text" class="form-control" id="kode" data-bs-toggle="modal"
+          data-bs-target="#masteritem" readonly>
+      </div>
+      <div class="col-sm-2">
+        <label>nama</label>
+        <input type="text" class="form-control" id="nama" readonly>
+      </div>
+      <div class="col-sm-2">
+        <label>harga</label>
+        <input type="number" class="form-control" id="harga" readonly>
+      </div>
+      <!-- TAMBAHAN: input qty -->
+      <div class="col-sm-2">
+        <label>qty</label>
+        <input type="number" class="form-control" id="qty" placeholder="Qty" min="1" value="">
+      </div>
+      <!-- TAMBAHAN: subtotal preview -->
+      <div class="col-sm-2">
+        <label>subtotal</label>
+        <input type="number" class="form-control bg-body-secondary" id="subtotal_preview" placeholder="Subtotal" readonly>
+      </div>
+      <div class="col-sm-2 d-flex align-items-end">
+        <button id="tambah" class="btn btn-primary w-100">tambah</button>
+      </div>
+    </div>
+
+    <table class="table table-bordered" id="tbldata">
+      <thead>
+        <tr>
+          <th>Action</th>
+          <th>kode</th>
+          <th>nama</th>
+          <th>harga</th>
+          <!-- TAMBAHAN: kolom qty & subtotal -->
+          <th>qty</th>
+          <th>subtotal</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4"></td>
+          <td>Total</td>
+          <td id="tot">0</td>
+        </tr>
+        <!-- TAMBAHAN: baris diskon -->
+        <tr>
+          <td colspan="4"></td>
+          <td>
+            Diskon
+            <input type="number" id="diskon_persen" class="form-control form-control-sm mt-1"
+              placeholder="0" min="0" max="100" style="width:70px; display:inline-block;">
+            <span class="text-muted">%</span>
+          </td>
+          <td><span id="diskon_nominal">0</span></td>
+        </tr>
+        <!-- TAMBAHAN: baris grandtotal -->
+        <tr>
+          <td colspan="4"></td>
+          <td>Grandtotal</td>
+          <td id="grandtotal">0</td>
+        </tr>
+        <!-- TAMBAHAN: baris bayar -->
+        <tr>
+          <td colspan="4"></td>
+          <td>Bayar</td>
+          <td class="d-flex align-items-center gap-2">
+            <span>Rp</span>
+            <input type="number" id="bayar" class="form-control">
+          </td>
+        </tr>
+        <!-- TAMBAHAN: baris kembalian -->
+        <tr>
+          <td colspan="4"></td>
+          <td>Kembalian</td>
+          <td id="kembali">0</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- The Modal -->
+  <div class="modal" id="masteritem">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Master Item</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table">
+            <thead>
+              <th>Pilih</th>
+              <th>kode</th>
+              <th>Nama</th>
+              <th>Harga</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td><button class="btn btn-success" data-bs-dismiss="modal"
+                    onclick="tambahtabel('m001','produk 01', '59000')">pilih</button></td>
+                <td>m001</td>
+                <td>produk 01</td>
+                <td>59000</td>
+              </tr>
+              <tr>
+                <td><button class="btn btn-success" data-bs-dismiss="modal"
+                    onclick="tambahtabel('m002','produk 02', '19000')">pilih</button></td>
+                <td>m002</td>
+                <td>produk 02</td>
+                <td>19000</td>
+              </tr>
+              <tr>
+                <td><button class="btn btn-success" data-bs-dismiss="modal"
+                    onclick="tambahtabel('m003','produk 03', '91000')">pilih</button></td>
+                <td>m003</td>
+                <td>produk 03</td>
+                <td>91000</td>
+              </tr>
+              <tr>
+                <td><button class="btn btn-success" data-bs-dismiss="modal"
+                    onclick="tambahtabel('m004','produk 04', '39000')">pilih</button></td>
+                <td>m004</td>
+                <td>produk 04</td>
+                <td>39000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    // ── fungsi asli latihanjq03 (tidak diubah) ──
+    function tambahtabel(kode, nama, harga) {
+      $("#kode").val(kode);
+      $("#nama").val(nama);
+      $("#harga").val(harga);
+      // reset qty & preview saat item baru dipilih
+      $("#qty").val("").focus();
+      $("#subtotal_preview").val("");
+    }
+
+    // ── DIPERBARUI: hitungtotal() sesuai pola script.js ──
+    function hitungtotal() {
+      let total = 0;
+
+      $("#tbldata tbody tr").each(function () {
+        let harga    = parseFloat($(this).find(".harga").text()) || 0;
+        let qty      = parseInt($(this).find(".qty").text()) || 1;
+        let subtotal = harga * qty;
+        $(this).find(".subtotal").text("Rp " + subtotal);
+        total += subtotal;
+      });
+
+      $("#tot").html("<b>" + total + "</b>");
+
+      // diskon
+      let persen  = parseFloat($("#diskon_persen").val()) || 0;
+      let nominal = Math.round(total * persen / 100);
+      $("#diskon_nominal").text("Rp " + nominal);
+
+      // grandtotal
+      let grandtotal = total - nominal;
+      if (grandtotal < 0) grandtotal = 0;
+      $("#grandtotal").text("Rp " + grandtotal);
+
+      // kembalian
+      let bayar   = parseFloat($("#bayar").val()) || 0;
+      let kembali = bayar >= grandtotal ? bayar - grandtotal : 0;
+      $("#kembali").text("Rp " + kembali);
+    }
+
+    // ── TAMBAHAN: update subtotal preview (sesuai script.js) ──
+    function updateSubtotalPreview() {
+      let harga = parseFloat($("#harga").val()) || 0;
+      let qty   = parseInt($("#qty").val()) || 0;
+      $("#subtotal_preview").val(qty > 0 ? harga * qty : "");
+    }
+
+    $(document).ready(function () {
+
+      // ── TAMBAHAN: update preview saat qty diketik ──
+      $("#qty").on("input", function () {
+        updateSubtotalPreview();
+      });
+
+      // ── tombol tambah (diperbarui: sekarang include qty & subtotal) ──
+      $("#tambah").click(function () {
+        let x = $("#kode").val().trim();
+        let y = $("#nama").val().trim();
+        let z = parseFloat($("#harga").val()) || 0;
+        let q = parseInt($("#qty").val()) || 0;
+
+        if (x === "")  { alert("Pilih item dulu!"); return; }
+        if (q <= 0)    { alert("Isi Qty terlebih dahulu!"); return; }
+
+        let subtotal = z * q;
+
+        let tbltr = `<tr>
+          <td><button class="btn btn-danger hapus">X</button></td>
+          <td>${x}</td>
+          <td>${y}</td>
+          <td class="harga">${z}</td>
+          <td class="qty">${q}</td>
+          <td class="subtotal">Rp ${subtotal}</td>
+        </tr>`;
+
+        $("#tbldata tbody").append(tbltr);
+        hitungtotal();
+
+        // reset input row
+        $("#kode, #nama, #harga, #qty, #subtotal_preview").val("");
+      });
+
+      // ── tombol hapus (tidak diubah) ──
+      $("#tbldata").on("click", ".hapus", function () {
+        $(this).closest('tr').remove();
+        hitungtotal();
+      });
+
+      // ── TAMBAHAN: event diskon & bayar (sesuai script.js) ──
+      $("#diskon_persen").on("input", function () {
+        hitungtotal();
+      });
+
+      $("#bayar").on("input", function () {
+        hitungtotal();
+      });
+
+    });
+  </script>
+</body>
+
+</html>
