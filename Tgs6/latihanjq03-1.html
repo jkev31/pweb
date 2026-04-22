@@ -108,8 +108,8 @@
 
 
     <!-- Table -->
-    <table class="table table-bordered" id="tbldata">
-      <thead>
+    <table class="table table-bordered border-dark table-hover table-striped" id="tbldata">
+      <thead class="table-dark text-light">
         <tr>
           <th>Action</th>
           <th>kode</th>
@@ -235,9 +235,10 @@
         let subtotal = harga * qty;
         $(this).find(".subtotal").text("Rp " + subtotal);
         total += subtotal;
+        console.log(total);
       });
 
-      $("#tot").html("<b>" + total + "</b>");
+      $("#tot").html("<b>Rp " + total + "</b>");
 
       // diskon
       let persen = parseFloat($("#diskon_persen").val()) || 0;
