@@ -14,16 +14,21 @@
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg bg-dark">   
-        <div class="container-fluid">
-            <a class="navbar-brand text-light" href="#">Simple POS</a>
+    <nav class="navbar navbar-expand-lg bg-dark"> <!-- main navigation element, background dark -->
+        
+        <div class="container-fluid"> <!-- main div untuk navbar, fluid agar bisa memenuhi seluruh layar -->
+            
+            <a class="navbar-brand text-light" href="#">Simple POS</a> <!-- main header text  -->
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            
+            <div class="collapse navbar-collapse" id="navbarSupportedContent"> <!-- div untuk menampung elemen navbar yang ada di dalam navbar, collapse digunakan untuk responsive design -->
+
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!-- unordered list -->
                     <li class="nav-item">
                         <a class="nav-link active bg-primary text-light" aria-current="page" href="#">Penjualan</a>
                     </li>
@@ -31,55 +36,66 @@
                         <a class="nav-link text-light" href="#">Pembelian</a>
                     </li>
                 </ul>
-            </div>
-        </div>
-    </nav>
 
-    <div class="container-fluid mt-3">
+            </div>
+
+        </div>
+
+    </nav> <!-- Navbar selesai -->
+
+
+    <div class="container-fluid mt-3"> <!-- container untuk main content, mt-3 = margin top 3 -->
 
         <!-- Header -->
-        <div class="mb-3">
-            <div class="d-flex align-items-center mb-2">
-                <label class="col-sm-1 col-form-label">Tanggal:</label>
+        <div class="mb-3"> <!-- div untuk header elements, mb-3 = margin bottom 3 -->
+
+            <div class="d-flex align-items-center mb-2"> <!-- div untuk header elements, d-flex = display flex, mb-2 = margin bottom 2 -->
+                <label class="col-sm-1 col-form-label">Tanggal:</label> <!-- label untuk tanggal -->
                 <div class="col-sm-2">
-                    <input type="date" class="form-control" id="tanggal">
+                    <input type="date" class="form-control" id="tanggal"> <!-- input tanggal -->
                 </div>
             </div>
-            <div class="d-flex align-items-center mb-2">
-                <label class="col-sm-1 col-form-label">Konsumen:</label>
+
+            <div class="d-flex align-items-center mb-2"> 
+                <label class="col-sm-1 col-form-label">Konsumen:</label> <!-- label untuk konsumen -->
                 <div class="col-sm-2">
-                    <input type="text" class="form-control" id="konsumen" placeholder="Nama konsumen">
+                    <input type="text" class="form-control" id="konsumen" placeholder="Nama konsumen"> <!-- input konsumen -->
                 </div>
             </div>
+
             <div class="d-flex align-items-center mb-2">
-                <label class="col-sm-1 col-form-label">No. Telp:</label>
+                <label class="col-sm-1 col-form-label">No. Telp:</label> <!-- label untuk no telepon -->
                 <div class="col-sm-2">
-                    <input type="text" class="form-control" id="notelp" placeholder="08...">
+                    <input type="text" class="form-control" id="notelp" placeholder="08..."> <!-- input no telepon -->
                 </div>
             </div>
+
             <div class="d-flex align-items-start mb-2">
-                <label class="col-sm-1 col-form-label">Keterangan:</label>
+                <label class="col-sm-1 col-form-label">Keterangan:</label> <!-- label untuk keterangan -->
                 <div class="col-sm-2">
-                    <textarea class="form-control" id="keterangan" placeholder="Masukkan keterangan"></textarea>
+                    <textarea class="form-control" id="keterangan" placeholder="Masukkan keterangan"></textarea> <!-- input keterangan -->
                 </div>
             </div>
-        </div><br>
+
+        </div><br> <!-- Header form selesai -->
+
 
         <!-- Input Row -->
-        <div class="d-flex gap-3 mb-3 flex-wrap align-items-center">
+        <div class="d-flex gap-2 mb-3 flex-wrap align-items-center"> <!-- gap-2 = memberikan jarak antar elemen di dalam div, mb-3 = margin bottom 3, flex-wrap = membungkus elemen jika tidak muat -->
             <input type="text" class="form-control w-auto" id="kode" placeholder="Kode" readonly>
             <input type="text" class="form-control w-auto" id="nama" placeholder="Nama" readonly>
             <input type="text" class="form-control w-auto" id="satuan" placeholder="Satuan" readonly>
             <input type="number" class="form-control w-auto" id="harga" placeholder="Harga" readonly>
             <input type="number" class="form-control w-auto" id="qty" placeholder="Qty" min="1" value="">
-            <input type="number" class="form-control w-auto bg-body-secondary" id="subtotal_preview" placeholder="Subtotal" readonly>
-            <button id="tambah" class="btn btn-primary col-sm-1">Tambah</button>
+            <input type="number" class="form-control w-auto bg-body-secondary" id="subtotal_preview" placeholder="Subtotal" readonly> <!-- bg-body-secondary = memberikan warna background pada input, readonly = input tidak bisa diedit -->
+            <button id="tambah" class="btn btn-primary col-sm-1">Tambah</button> <!-- tombol tambah -->
         </div>
 
         <!-- Table -->
-        <table class="table table-bordered border-dark table-hover table-striped" id="tbldata">
-            <thead>
-                <tr>
+        <table class="table table-bordered border-dark table-hover table-striped" id="tbldata"> <!-- table-hover = memberikan efek hover pada tabel, table-striped = memberikan efek warna berselang pada tabel -->
+
+            <thead> <!-- thead = table header -->
+                <tr> <!-- tr = table row header -->
                     <th class="bg-dark text-light">Action</th>
                     <th class="bg-dark text-light">Kode</th>
                     <th class="bg-dark text-light">Nama</th>
@@ -89,14 +105,17 @@
                     <th class="bg-dark text-light">Subtotal</th>
                 </tr>
             </thead>
-            <tbody></tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="5"></td>
-                    <td>Total</td>
+
+            <tbody></tbody> <!-- tbody = table body -->
+
+            <tfoot> <!-- tfoot = table footer -->
+                <tr> <!-- tr = table row footer -->
+                    <td colspan="5"></td> <!-- colspan = menggabungkan kolom -->
+                    <td>Total</td> <!-- td = cell -->
                     <td id="total">0</td>
                 </tr>
-                <tr>
+
+                <tr> 
                     <td colspan="5"></td>
                     <td>
                         Diskon
@@ -108,34 +127,43 @@
                         <span id="diskon_nominal">0</span>
                     </td>
                 </tr>
+
                 <tr>
                     <td colspan="5"></td>
                     <td>Grandtotal</td>
                     <td id="grandtotal">0</td>
                 </tr>
+
                 <tr>
                     <td colspan="5"></td>
                     <td>Bayar</td>
                     <td class="d-flex align-items-center gap-2"><span>Rp</span><input type="number" id="bayar" class="form-control"></td>
                 </tr>
+
                 <tr>
                     <td colspan="5"></td>
                     <td>Kembalian</td>
                     <td id="kembali">0</td>
                 </tr>
             </tfoot>
-        </table>
 
-    </div>
+        </table> <!-- Table selesai -->
+
+    </div> <!-- Main content selesai -->
+
 
     <!-- MODAL -->
-    <div class="modal fade" id="modalItem">
-        <div class="modal-dialog">
+    <div class="modal fade" id="modalItem"> <!-- fade = memberikan efek menghilang perlahan pada saat modal ditampilkan dan ditutup -->
+
+        <div class="modal-dialog"> <!-- modal-dialog = memberikan ukuran pada modal -->
+
             <div class="modal-content">
+
                 <div class="modal-header">
                     <h5>Pilih Item</h5>
                     <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
+
                 <div class="modal-body">
                     <table class="table table-bordered">
                         <thead>
@@ -146,12 +174,16 @@
                                 <th>Aksi</th>
                             </tr>
                         </thead>
+
                         <tbody id="listItem"></tbody>
                     </table>
                 </div>
+
             </div>
+
         </div>
-    </div>
+        
+    </div> <!-- Modal selesai -->
 
     <script src="script.js"></script>
 
