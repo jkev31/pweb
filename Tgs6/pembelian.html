@@ -28,10 +28,10 @@
 
         <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!-- unordered list -->
           <li class="nav-item">
-            <a class="nav-link active bg-primary text-light" aria-current="page" href="#">Penjualan</a>
+            <a class="nav-link text-light" aria-current="page" href="penjualan.html">Penjualan</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-light" href="#">Pembelian</a>
+            <a class="nav-link text-light active bg-primary" href="#">Pembelian</a>
           </li>
         </ul>
 
@@ -54,9 +54,9 @@
       </div>
 
       <div class="d-flex align-items-center mb-2">
-        <label class="col-sm-1 col-form-label">Konsumen:</label> <!-- label untuk konsumen -->
+        <label class="col-sm-1 col-form-label">Supplier:</label> <!-- label untuk konsumen -->
         <div class="col-sm-2">
-          <input type="text" class="form-control" id="konsumen" placeholder="Nama konsumen"> <!-- input konsumen -->
+          <input type="text" class="form-control" id="supplier" placeholder="Nama supplier"> <!-- input konsumen -->
         </div>
       </div>
 
@@ -124,7 +124,7 @@
         <tr>
           <td colspan="4"></td>
           <td>Total</td>
-          <td id="tot">0</td>
+          <td>Rp <span id="tot">0</span></td>
         </tr>
         <tr>
           <td colspan="4"></td>
@@ -134,12 +134,12 @@
               max="100" style="width:70px; display:inline-block;">
             <span class="text-muted">%</span>
           </td>
-          <td><span id="diskon_nominal">0</span></td>
+          <td>Rp <span id="diskon_nominal">0</span></td>
         </tr>
         <tr>
           <td colspan="4"></td>
           <td>Grandtotal</td>
-          <td id="grandtotal">0</td>
+          <td>Rp <span id="grandtotal">0</span></td>
         </tr>
         <tr>
           <td colspan="4"></td>
@@ -152,16 +152,21 @@
         <tr>
           <td colspan="4"></td>
           <td>Kembalian</td>
-          <td id="kembali">0</td>
+          <td>Rp <span id="kembali">0</span></td>
         </tr>
       </tfoot>
     </table>
+    <div class="row mb-3 mt-3 d-flex justify-content-end">
+      <div class="col-sm-2">
+        <button id="order" class="btn btn-success col-sm-12">order</button>
+      </div>
+    </div>
   </div>
 
 
 
   <!-- The Modal -->
-  <div class="modal fade" id="masteritem">
+  <div class="modal" id="masteritem">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -218,7 +223,7 @@
 
 
   <script>
-    function tambahtabel(kode, nama, harga) { // tambah data ke row input stlh btn pilih diklik
+    function tambahtabel(kode, nama, harga) {
       $("#kode").val(kode);
       $("#nama").val(nama);
       $("#harga").val(harga);
@@ -238,22 +243,22 @@
         console.log(total);
       });
 
-      $("#tot").html("<b>Rp " + total + "</b>");
+      $("#tot").html("<b>" + total + "</b>");
 
       // diskon
       let persen = parseFloat($("#diskon_persen").val()) || 0;
       let nominal = Math.round(total * persen / 100);
-      $("#diskon_nominal").text("Rp " + nominal);
+      $("#diskon_nominal").text(nominal);
 
       // grandtotal
       let grandtotal = total - nominal;
       if (grandtotal < 0) grandtotal = 0;
-      $("#grandtotal").text("Rp " + grandtotal);
+      $("#grandtotal").text(grandtotal);
 
       // kembalian
       let bayar = parseFloat($("#bayar").val()) || 0;
       let kembali = bayar >= grandtotal ? bayar - grandtotal : 0;
-      $("#kembali").text("Rp " + kembali);
+      $("#kembali").text(kembali);
     }
 
     // update subtotal preview 
@@ -311,6 +316,46 @@
 
       $("#bayar").on("input", function () {
         hitungtotal();
+      });
+
+
+
+
+      $("#order").click(function () {
+        let grandtotal = parseFloat($("#grandtotal").text()) || 0;
+        let bayar = parseFloat($("#bayar").val()) || 0;
+        let kembali = parseFloat($("#kembali").text()) || 0;
+
+        if ($("#bayar").val() === "") {
+          alert("Isi bayar terlebih dahulu!"); // jika belum byr, keluar
+          return;
+
+        } else if (bayar < grandtotal) {
+          alert("Bayar tidak cukup!"); // jika uang kurang, keluar
+          return;
+
+        } else if (bayar === grandtotal) {
+          alert("Terima kasih!\n Pembayaran berhasil!\n Uang pas!"); // jika uang pas, keluar
+          // reset input row
+          $("#kode, #nama, #harga, #qty, #subtotal_preview").val("");
+          // clear table
+          $("#tbldata tbody").empty();
+          hitungtotal();
+          $("#bayar").val("");
+          $("#kembali").text("0");
+
+        } else {
+          let kembali = bayar - grandtotal;
+          alert("Terima kasih!\n Pembayaran berhasil!\n Kembalian : Rp " + kembali); // jika uang lebih, keluar
+          // reset input row
+          $("#kode, #nama, #harga, #qty, #subtotal_preview").val("");
+          // clear table
+          $("#tbldata tbody").empty();
+          hitungtotal();
+          $("#bayar").val("");
+          $("#kembali").text("0");
+        }
+
       });
 
     });
