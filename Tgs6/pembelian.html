@@ -89,6 +89,10 @@
         <input type="text" class="form-control" id="nama" readonly>
       </div>
       <div class="col-sm-2">
+        <label class="mb-1">satuan</label>
+        <input type="text" class="form-control" id="satuan" readonly>
+      </div>
+      <div class="col-sm-2">
         <label class="mb-1">harga</label>
         <input type="number" class="form-control" id="harga" readonly>
       </div>
@@ -114,6 +118,7 @@
           <th>Action</th>
           <th>kode</th>
           <th>nama</th>
+          <th>satuan</th>
           <th>harga</th>
           <th>qty</th>
           <th>subtotal</th>
@@ -179,6 +184,7 @@
               <th>Pilih</th>
               <th>kode</th>
               <th>Nama</th>
+              <th>satuan</th>
               <th>Harga</th>
             </thead>
             <tbody>
@@ -187,6 +193,7 @@
                     onclick="tambahtabel('m001','produk 01', '59000')">pilih</button></td>
                 <td>m001</td>
                 <td>produk 01</td>
+                <td>pcs</td>
                 <td>59000</td>
               </tr>
               <tr>
@@ -194,6 +201,7 @@
                     onclick="tambahtabel('m002','produk 02', '19000')">pilih</button></td>
                 <td>m002</td>
                 <td>produk 02</td>
+                <td>pcs</td>
                 <td>19000</td>
               </tr>
               <tr>
@@ -201,6 +209,7 @@
                     onclick="tambahtabel('m003','produk 03', '91000')">pilih</button></td>
                 <td>m003</td>
                 <td>produk 03</td>
+                <td>pcs</td>
                 <td>91000</td>
               </tr>
               <tr>
@@ -208,6 +217,7 @@
                     onclick="tambahtabel('m004','produk 04', '39000')">pilih</button></td>
                 <td>m004</td>
                 <td>produk 04</td>
+                <td>pcs</td>
                 <td>39000</td>
               </tr>
             </tbody>
@@ -223,9 +233,10 @@
 
 
   <script>
-    function tambahtabel(kode, nama, harga) {
+    function tambahtabel(kode, nama, satuan, harga) {
       $("#kode").val(kode);
       $("#nama").val(nama);
+      $("#satuan").val(satuan);
       $("#harga").val(harga);
       $("#qty").val("").focus();
       $("#subtotal_preview").val("");
@@ -279,6 +290,7 @@
       $("#tambah").click(function () {
         let x = $("#kode").val().trim();
         let y = $("#nama").val().trim();
+        let s = $("#satuan").val().trim();
         let z = parseFloat($("#harga").val()) || 0;
         let q = parseInt($("#qty").val()) || 0;
 
@@ -291,6 +303,7 @@
           <td><button class="btn btn-danger hapus">X</button></td>
           <td>${x}</td>
           <td>${y}</td>
+          <td>${s}</td>
           <td class="harga">${z}</td>
           <td class="qty">${q}</td>
           <td class="subtotal">Rp ${subtotal}</td>
@@ -300,7 +313,7 @@
         hitungtotal();
 
         // reset input row
-        $("#kode, #nama, #harga, #qty, #subtotal_preview").val("");
+        $("#kode, #nama, #satuan, #harga, #qty, #subtotal_preview").val("");
       });
 
       // tombol hapus
@@ -337,7 +350,7 @@
         } else if (bayar === grandtotal) {
           alert("Terima kasih!\n Pembayaran berhasil!\n Uang pas!"); // jika uang pas, keluar
           // reset input row
-          $("#kode, #nama, #harga, #qty, #subtotal_preview").val("");
+          $("#kode, #nama, #satuan, #harga, #qty, #subtotal_preview").val("");
           // clear table
           $("#tbldata tbody").empty();
           hitungtotal();
@@ -348,7 +361,7 @@
           let kembali = bayar - grandtotal;
           alert("Terima kasih!\n Pembayaran berhasil!\n Kembalian : Rp " + kembali); // jika uang lebih, keluar
           // reset input row
-          $("#kode, #nama, #harga, #qty, #subtotal_preview").val("");
+          $("#kode, #nama, #satuan, #harga, #qty, #subtotal_preview").val("");
           // clear table
           $("#tbldata tbody").empty();
           hitungtotal();
