@@ -58,11 +58,11 @@
       <div class="col-sm-1">
         <label class="mb-1">tipe</label>
         <select class="form-select" id="tipe">
-          <option value="">tipe</option>
-          <option value="S">S (+1000)</option>
-          <option value="M">M (+2000)</option>
-          <option value="L">L (+3000)</option>
-          <option value="XL">XL (+4000)</option>
+          <option value="" disabled selected>pilih tipe</option>
+          <option value="S">S</option>
+          <option value="M">M</option>
+          <option value="L">L</option>
+          <option value="XL">XL</option>
         </select>
       </div>
       <div class="col-sm-2">
@@ -198,41 +198,48 @@
 
 
   <script>
+    let hargaawal = 0;
     function tambahtabel(kode, nama, satuan, harga) { // tambah data ke row input stlh btn pilih diklik
       $("#kode").val(kode);
       $("#nama").val(nama);
       $("#satuan").val(satuan);
       $("#harga").val(harga);
-      $("#tipe").val(tipe);
-      $("#qty").val("").focus();
-      $("#subtotal_preview").val("");
+      hargaawal = harga;
+      $("#qty").val(1).focus();
+      $("#subtotal_preview").val(harga);
     }
+
+    $(document).on("change", "#tipe", function () {
+      let tipe = $("#tipe").val().trim();
+      let tambahan = 0;
+      if (tipe === "S") {
+        tambahan = 1000;
+      }
+      else if (tipe === "M") {
+        tambahan = 2000;
+      }
+      else if (tipe === "L") {
+        tambahan = 3000;
+      }
+      else if (tipe === "XL") {
+        tambahan = 4000;
+      }
+      let hargafinal = hargaawal + tambahan;
+      let subtotal = $("#qty").val() * hargafinal;
+      $("#subtotal_preview").val(subtotal);
+      console.log(hargafinal);
+      $("#harga").val(hargafinal);
+    })
 
     function hitungtotal() {
       let total = 0;
 
       $("#tbldata tbody tr").each(function () {
-        let harga = parseFloat($(this).find(".harga").text()) || 0;
-        let qty = parseInt($(this).find(".qty").text()) || 1;
-        let tipe = $(this).find(".tipe").text() || "";
-        let tambahan = 0;
-        if (tipe != "") {
-          if (tipe === "S") {
-            tambahan = 1000;
-          } else if (tipe === "M") {
-            tambahan = 2000;
-          } else if (tipe === "L") {
-            tambahan = 3000;
-          } else if (tipe === "XL") {
-            tambahan = 4000;
-          }
-        } else {
-          tambahan = 0;
-        }
-        let subtotal = (harga + tambahan) * qty;
+        let harga = parseFloat($("#harga").val()) || 0;
+        let qty = parseInt($("#qty").val()) || 1;
+        let subtotal = hargafinal * qty;
         $(this).find(".subtotal").text("Rp " + subtotal);
         total += subtotal;
-        console.log(total);
       });
 
       $("#tot").html("<b>" + total + "</b>");
@@ -255,24 +262,9 @@
 
     // update subtotal preview 
     function updateSubtotalPreview() {
-      let harga = parseFloat($("#harga").val()) || 0;
+      let hargafinal = hargaawal + tambahan;
       let qty = parseInt($("#qty").val()) || 0;
-      let tipe = $("#tipe").val().trim();
-      let tambahan = 0;
-      if (tipe != "") {
-        if (tipe === "S") {
-          tambahan = 1000;
-        } else if (tipe === "M") {
-          tambahan = 2000;
-        } else if (tipe === "L") {
-          tambahan = 3000;
-        } else if (tipe === "XL") {
-          tambahan = 4000;
-        }
-      } else {
-        tambahan = 0;
-      }
-      $("#subtotal_preview").val(qty > 0 ? (harga + tambahan) * qty : "");
+      $("#subtotal_preview").val(qty > 0 ? hargafinal * qty : "");
     }
 
     $(document).ready(function () {
@@ -287,23 +279,24 @@
         let x = $("#kode").val().trim();
         let y = $("#nama").val().trim();
         let s = $("#satuan").val().trim();
-        let z = parseFloat($("#harga").val()) || 0;
+        let z = hargaawal;
+        let t = $("#tipe").val();
         let q = parseInt($("#qty").val()) || 0;
-        let t = $("#tipe").val().trim();
+        let subtotal = hargafinal * q;
+        
 
         if (x === "") { alert("Pilih item dulu!"); return; }
         if (q <= 0) { alert("Isi Qty terlebih dahulu!"); return; }
-        if (t === "") { alert("Pilih tipe terlebih dahulu!"); return; }
-
-        let subtotal = (z + t) * q;
+        if (t == ""){ alert("Pilih tipe terlebih dahulu!"); return; }
+        
 
         let tbltr = `<tr>
           <td><button class="btn btn-danger hapus">X</button></td>
           <td>${x}</td>
           <td>${y}</td>
           <td>${s}</td>
-          <td class="harga">${z}</td>
-          <td class="tipe">${t}</td>
+          <td>${z}</td>
+          <td>${t}</td>
           <td class="qty">${q}</td>
           <td class="subtotal">Rp ${subtotal}</td>
         </tr>`;
