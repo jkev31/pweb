@@ -3,7 +3,6 @@
   <div class="container-fluid mt-3">
     <!-- Header -->
     <div class="mb-3"> <!-- div untuk header elements, mb-3 = margin bottom 3 -->
-
       <div class="d-flex align-items-center mb-2">
         <!-- div untuk header elements, d-flex = display flex, mb-2 = margin bottom 2 -->
         <label class="col-sm-1 col-form-label">Tanggal:</label> <!-- label untuk tanggal -->
@@ -13,9 +12,16 @@
       </div>
 
       <div class="d-flex align-items-center mb-2">
-        <label class="col-sm-1 col-form-label">Konsumen:</label> <!-- label untuk konsumen -->
+        <label class="col-sm-1 col-form-label">Supplier:</label> <!-- label untuk konsumen -->
         <div class="col-sm-2">
-          <input type="text" class="form-control" id="konsumen" placeholder="Nama konsumen"> <!-- input konsumen -->
+          <input type="text" class="form-control" id="supplier" placeholder="Nama supplier"> <!-- input konsumen -->
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center mb-2">
+        <label class="col-sm-1 col-form-label">Alamat:</label> <!-- label untuk konsumen -->
+        <div class="col-sm-2">
+          <input type="text" class="form-control" id="alamat" placeholder="Alamat Supplier"> <!-- input konsumen -->
         </div>
       </div>
 
@@ -47,23 +53,13 @@
         <label class="mb-1">nama</label>
         <input type="text" class="form-control" id="nama" readonly>
       </div>
-      <div class="col-sm-1">
+      <div class="col-sm-2">
         <label class="mb-1">satuan</label>
         <input type="text" class="form-control" id="satuan" readonly>
       </div>
       <div class="col-sm-2">
         <label class="mb-1">harga</label>
         <input type="number" class="form-control" id="harga" readonly>
-      </div>
-      <div class="col-sm-1">
-        <label class="mb-1">tipe</label>
-        <select class="form-select" id="tipe">
-          <option value="" disabled selected>pilih tipe</option>
-          <option value="S">S</option>
-          <option value="M">M</option>
-          <option value="L">L</option>
-          <option value="XL">XL</option>
-        </select>
       </div>
       <div class="col-sm-2">
         <label class="mb-1">qty</label>
@@ -89,7 +85,6 @@
           <th>nama</th>
           <th>satuan</th>
           <th>harga</th>
-          <th>tipe</th>
           <th>qty</th>
           <th>subtotal</th>
         </tr>
@@ -97,12 +92,12 @@
       <tbody></tbody>
       <tfoot>
         <tr>
-          <td colspan="6"></td>
+          <td colspan="5"></td>
           <td>Total</td>
           <td>Rp <span id="tot">0</span></td>
         </tr>
         <tr>
-          <td colspan="6"></td>
+          <td colspan="5"></td>
           <td>
             Diskon
             <input type="number" id="diskon_persen" class="form-control form-control-sm mt-1" placeholder="0" min="0"
@@ -112,22 +107,9 @@
           <td>Rp <span id="diskon_nominal">0</span></td>
         </tr>
         <tr>
-          <td colspan="6"></td>
+          <td colspan="5"></td>
           <td>Grandtotal</td>
           <td>Rp <span id="grandtotal">0</span></td>
-        </tr>
-        <tr>
-          <td colspan="6"></td>
-          <td>Bayar</td>
-          <td class="d-flex align-items-center gap-2">
-            <span>Rp</span>
-            <input type="number" id="bayar" class="form-control">
-          </td>
-        </tr>
-        <tr>
-          <td colspan="6"></td>
-          <td>Kembalian</td>
-          <td>Rp <span id="kembali">0</span></td>
         </tr>
       </tfoot>
     </table>
@@ -136,7 +118,7 @@
 
 
   <!-- The Modal -->
-  <div class="modal fade" id="masteritem">
+  <div class="modal" id="masteritem">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -197,52 +179,27 @@
 
 
 
+
   <script>
-    let hargaawal = 0;
-    function tambahtabel(kode, nama, satuan, harga) { // tambah data ke row input stlh btn pilih diklik
+    function tambahtabel(kode, nama, satuan, harga) {
       $("#kode").val(kode);
       $("#nama").val(nama);
       $("#satuan").val(satuan);
       $("#harga").val(harga);
-      hargaawal = parseFloat(harga);
-      $("#qty").val(1).focus();
-      $("#subtotal_preview").val(harga);
+      $("#qty").val("").focus();
+      $("#subtotal_preview").val("");
     }
-
-    $(document).on("change", "#tipe", function () {
-      let tipe = $("#tipe").val().trim();
-      let tambahan = 0;
-      if (tipe === "S") {
-        tambahan = 1000;
-      }
-      else if (tipe === "M") {
-        tambahan = 2000;
-      }
-      else if (tipe === "L") {
-        tambahan = 3000;
-      }
-      else if (tipe === "XL") {
-        tambahan = 4000;
-      }
-      hargaawal = parseFloat($("#harga").val());
-      let hargafinal = parseFloat(hargaawal) + tambahan;
-      let subtotal = $("#qty").val() * parseFloat(hargafinal);
-      $("#subtotal_preview").val(subtotal);
-      console.log(hargafinal);
-      $("#harga").val(hargafinal);
-    })
 
     function hitungtotal() {
       let total = 0;
 
       $("#tbldata tbody tr").each(function () {
-        let harga = parseFloat($("#harga").val()) || 0;
-        hargaawal = harga;
-        let hargafinal = parseFloat(hargaawal) + tambahan;
-        let qty = parseInt($("#qty").val()) || 1;
-        let subtotal = parseFloat(hargafinal) * qty;
+        let harga = parseFloat($(this).find(".harga").text()) || 0;
+        let qty = parseInt($(this).find(".qty").text()) || 1;
+        let subtotal = harga * qty;
         $(this).find(".subtotal").text("Rp " + subtotal);
         total += subtotal;
+        console.log(total);
       });
 
       $("#tot").html("<b>" + total + "</b>");
@@ -257,32 +214,13 @@
       if (grandtotal < 0) grandtotal = 0;
       $("#grandtotal").text(grandtotal);
 
-      // kembalian
-      let bayar = parseFloat($("#bayar").val()) || 0;
-      let kembali = bayar >= grandtotal ? bayar - grandtotal : 0;
-      $("#kembali").text(kembali);
     }
 
     // update subtotal preview 
     function updateSubtotalPreview() {
-      hargaawal = parseFloat($("#harga").val());
-      let tipe = $("#tipe").val().trim();
-      let tambahan = 0;
-      if (tipe === "S") {
-        tambahan = 1000;
-      }
-      else if (tipe === "M") {
-        tambahan = 2000;
-      }
-      else if (tipe === "L") {
-        tambahan = 3000;
-      }
-      else if (tipe === "XL") {
-        tambahan = 4000;
-      }
-      let hargafinal = hargaawal + tambahan;
+      let harga = parseFloat($("#harga").val()) || 0;
       let qty = parseInt($("#qty").val()) || 0;
-      $("#subtotal_preview").val(qty > 0 ? hargafinal * qty : "");
+      $("#subtotal_preview").val(qty > 0 ? harga * qty : "");
     }
 
     $(document).ready(function () {
@@ -297,38 +235,20 @@
         let x = $("#kode").val().trim();
         let y = $("#nama").val().trim();
         let s = $("#satuan").val().trim();
-        let hargaawal = parseFloat($("#harga").val());
-        let tambahan = 0;
-        let t = $("#tipe").val();
-        if (t === "S") {
-          tambahan = 1000;
-        }
-        else if (t === "M") {
-          tambahan = 2000;
-        }
-        else if (t === "L") {
-          tambahan = 3000;
-        }
-        else if (t === "XL") {
-          tambahan = 4000;
-        }
-        let hargafinal = parseFloat(hargaawal) + tambahan;
+        let z = parseFloat($("#harga").val()) || 0;
         let q = parseInt($("#qty").val()) || 0;
-        let subtotal = parseFloat(hargafinal) * q;
-        
 
         if (x === "") { alert("Pilih item dulu!"); return; }
         if (q <= 0) { alert("Isi Qty terlebih dahulu!"); return; }
-        if (t == ""){ alert("Pilih tipe terlebih dahulu!"); return; }
-        
+
+        let subtotal = z * q;
 
         let tbltr = `<tr>
           <td><button class="btn btn-danger hapus">X</button></td>
           <td>${x}</td>
           <td>${y}</td>
           <td>${s}</td>
-          <td>${hargafinal}</td>
-          <td>${t}</td>
+          <td class="harga">${z}</td>
           <td class="qty">${q}</td>
           <td class="subtotal">Rp ${subtotal}</td>
         </tr>`;
@@ -337,7 +257,7 @@
         hitungtotal();
 
         // reset input row
-        $("#kode, #nama, #satuan, #harga, #tipe, #qty, #subtotal_preview").val("");
+        $("#kode, #nama, #satuan, #harga, #qty, #subtotal_preview").val("");
       });
 
       // tombol hapus
@@ -348,10 +268,6 @@
 
 
       $("#diskon_persen").on("input", function () {
-        hitungtotal();
-      });
-
-      $("#bayar").on("input", function () {
         hitungtotal();
       });
 
