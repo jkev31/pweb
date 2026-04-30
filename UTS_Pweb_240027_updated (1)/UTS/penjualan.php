@@ -51,20 +51,20 @@
         <label class="mb-1">satuan</label>
         <input type="text" class="form-control" id="satuan" readonly>
       </div>
-      <div class="col-sm-2">
-        <label class="mb-1">harga</label>
-        <input type="number" class="form-control" id="harga" readonly>
-        <input type="hidden" id="harga_dasar">
-      </div>
       <div class="col-sm-1">
         <label class="mb-1">tipe</label>
         <select class="form-select" id="tipe">
           <option value="" disabled selected>Pilih Tipe</option>
-          <option value="S" data-tambah="1000">S (+1.000)</option>
-          <option value="M" data-tambah="2000">M (+2.000)</option>
-          <option value="L" data-tambah="3000">L (+3.000)</option>
-          <option value="XL" data-tambah="4000">XL (+4.000)</option>
+          <option value="S" data-tambah="1000">S</option>
+          <option value="M" data-tambah="2000">M</option>
+          <option value="L" data-tambah="3000">L</option>
+          <option value="XL" data-tambah="4000">XL</option>
         </select>
+      </div>
+      <div class="col-sm-2">
+        <label class="mb-1">harga</label>
+        <input type="number" class="form-control" id="harga" readonly>
+        <input type="hidden" id="harga_dasar">
       </div>
       <div class="col-sm-1">
         <label class="mb-1">qty</label>
@@ -89,8 +89,8 @@
           <th>kode</th>
           <th>nama</th>
           <th>satuan</th>
-          <th>harga</th>
           <th>tipe</th>
+          <th>harga</th>
           <th>qty</th>
           <th>subtotal</th>
         </tr>
@@ -200,14 +200,14 @@
 
   <script>
     // Tambahan harga per tipe
-    const tipeTambah = { S: 1000, M: 2000, L: 3000, XL: 4000 };
+    
 
     function tambahtabel(kode, nama, satuan, harga) { // tambah data ke row input stlh btn pilih diklik
       $("#kode").val(kode);
       $("#nama").val(nama);
       $("#satuan").val(satuan);
       $("#harga_dasar").val(harga);   // simpan harga asli
-      $("#tipe").val("").prop("selectedIndex", 0); // reset tipe
+      $("#tipe").val(""); // reset tipe
       $("#harga").val(harga);         // tampilkan harga awal dulu
       $("#qty").val(1).focus();
       $("#subtotal_preview").val("");
@@ -217,8 +217,9 @@
       let total = 0;
 
       $("#tbldata tbody tr").each(function () {
-        let harga = parseFloat($("#harga").val()) || 0;
-        let qty = parseInt($("#qty").val()) || 1;
+        // Baca dari data-val (nilai numerik murni tanpa format)
+        let harga = parseFloat($(this).find(".harga").data('val')) || 0;
+        let qty = parseInt($(this).find(".qty").data('val')) || 1;
         let subtotal = harga * qty;
         $(this).find(".subtotal").text("Rp " + subtotal);
         total += subtotal;
@@ -226,7 +227,7 @@
 
       $("#tot").html("<b>" + total + "</b>");
 
-      // diskon
+      // diskon — baca nilai saat ini, jangan overwrite input
       let persen = parseFloat($("#diskon_persen").val()) || 0;
       let nominal = Math.round(total * persen / 100);
       $("#diskon_nominal").text(nominal);
@@ -236,7 +237,7 @@
       if (grandtotal < 0) grandtotal = 0;
       $("#grandtotal").text(grandtotal);
 
-      // kembalian
+      // kembalian — baca nilai bayar saat ini, jangan overwrite input
       let bayar = parseFloat($("#bayar").val()) || 0;
       let kembali = bayar >= grandtotal ? bayar - grandtotal : 0;
       $("#kembali").text(kembali);
@@ -252,10 +253,9 @@
     $(document).ready(function () {
 
       // onChange tipe: ubah harga = harga_dasar + tambahan tipe
-      $(document).on("change", "#tipe",function () {
+      $(document).on("change", "#tipe", function () {
         let hargaDasar = parseFloat($("#harga_dasar").val()) || 0;
-        let selectedTipe = $(this).val();
-        let tambahan = tipeTambah[selectedTipe] || 0;
+        let tambahan = parseFloat($(this).find(":selected").data("tambah")) || 0;
         let hargaBaru = hargaDasar + tambahan;
         $("#harga").val(hargaBaru);
         updateSubtotalPreview();
@@ -287,8 +287,8 @@
           <td>${y}</td>
           <td>${s}</td>
           <td>${t}</td>
-          <td class="harga">${z}</td>
-          <td class="qty">${q}</td>
+          <td class="harga" data-val="${z}">${z}</td>
+          <td class="qty" data-val="${q}">${q}</td>
           <td class="subtotal">Rp ${subtotal}</td>
         </tr>`;
 
@@ -297,7 +297,7 @@
 
         // reset input row
         $("#kode, #nama, #satuan, #harga, #qty, #subtotal_preview, #harga_dasar").val("");
-        $("#tipe").val("").prop("selectedIndex", 0);
+        $("#tipe").val("");
       });
 
       // tombol hapus
