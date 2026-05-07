@@ -198,26 +198,38 @@
 
 
   <script>
-    function tambahtabel(kode, nama, satuan, harga) { // tambah data ke row input stlh btn pilih diklik
+    // Fungsi ini dipanggil ketika pengguna mengklik tombol "pilih" pada modal Master Item.
+    // Alur: Menerima data dari parameter -> Mengisi field input di form atas -> Menyiapkan qty default -> Mengkalkulasi preview.
+    function tambahtabel(kode, nama, satuan, harga) { 
+      // Mengisi field input dengan data parameter
       $("#kode").val(kode);
       $("#nama").val(nama);
       $("#satuan").val(satuan);
       $("#harga").val(harga);
       $("#tipe").val(tipe);
+      // Mengisi nilai default qty = 1 dan memindahkan kursor (fokus) ke input qty
       $("#qty").val(1).focus();
+      // Memperbarui nilai subtotal preview berdasarkan data yang baru masuk
       updateSubtotalPreview();
       $("#subtotal_preview").val("");
     }
 
+    // Fungsi utama untuk menghitung ulang semua rincian harga pada tabel keranjang belanja.
+    // Alur keseluruhan: Menghitung subtotal tiap baris -> Menjumlahkan total -> Mengurangi diskon -> Menentukan grandtotal -> Menghitung uang kembalian.
     function hitungtotal() {
       let total = 0;
 
+      // Melakukan iterasi (perulangan) pada setiap baris item yang ada di tabel keranjang
       $("#tbldata tbody tr").each(function () {
         let row = $(this);
+        
+        // Mengambil nilai dari kolom-kolom terkait di baris saat ini
         let harga = parseFloat(row.find(".harga").text()) || 0;
         let qty = parseInt(row.find(".qty").text()) || 1;
         let tipe = row.find(".tipe").text() || "";
         let tambahan = 0;
+        
+        // Menentukan tambahan harga berdasarkan tipe/ukuran
         if (tipe != "") {
           if (tipe === "S") {
             tambahan = 1000;
@@ -231,36 +243,50 @@
         } else {
           tambahan = 0;
         }
+        // Menghitung subtotal per baris: (harga dasar + biaya tambahan) dikali jumlah barang
         let subtotal = (harga + tambahan) * qty;
+        
+        // Menampilkan subtotal ke kolom subtotal di baris tersebut
         $(this).find(".subtotal").text("Rp " + subtotal);
+        
+        // Menambahkan subtotal baris ke total akumulasi seluruh belanjaan
         total += subtotal;
         console.log(total);
       });
 
+      // Menampilkan total keseluruhan (sebelum diskon) ke tampilan
       $("#tot").html("<b>" + total + "</b>");
 
-      // diskon
+      // --- Alur Diskon ---
+      // Menghitung potongan harga berdasarkan persentase yang dimasukkan pengguna
       let persen = parseFloat($("#diskon_persen").val()) || 0;
-      let nominal = Math.round(total * persen / 100);
+      let nominal = Math.round(total * persen / 100); // Nominal potongan dalam Rupiah
       $("#diskon_nominal").text(nominal);
 
-      // grandtotal
+      // --- Alur Grandtotal ---
+      // Menghitung harga akhir setelah dikurangi nominal diskon
       let grandtotal = total - nominal;
+      // Memastikan agar grandtotal tidak minus jika diskon terlalu besar
       if (grandtotal < 0) grandtotal = 0;
       $("#grandtotal").text(grandtotal);
 
-      // kembalian
+      // --- Alur Kembalian ---
+      // Menghitung uang kembali jika nominal bayar lebih besar atau sama dengan grandtotal
       let bayar = parseFloat($("#bayar").val()) || 0;
       let kembali = bayar >= grandtotal ? bayar - grandtotal : 0;
       $("#kembali").text(kembali);
     }
 
-    // update subtotal preview 
+    // Fungsi untuk memproyeksikan (preview) subtotal pada form input sebelum item ditambahkan ke keranjang.
+    // Alur: Mengambil input harga, qty, dan tipe dari form -> Menghitung tambahan biaya -> Menampilkan kalkulasi di kotak subtotal.
     function updateSubtotalPreview() {
+      // Mengambil data inputan sementara dari form (bukan tabel)
       let harga = parseFloat($("#harga").val()) || 0;
       let qty = parseInt($("#qty").val()) || 0;
       let tipe = $("#tipe").val().trim();
       let tambahan = 0;
+      
+      // Menentukan biaya tambahan sesuai tipe/ukuran
       if (tipe != "") {
         if (tipe === "S") {
           tambahan = 1000;
@@ -274,22 +300,27 @@
       } else {
         tambahan = 0;
       }
+      
+      // Menampilkan hasil kalkulasi pratinjau ke field subtotal, jika qty valid (>0)
       $("#subtotal_preview").val(qty > 0 ? (harga + tambahan) * qty : "");
     }
 
+    // Blok kode utama yang dijalankan saat struktur HTML dokumen selesai dimuat (DOM Ready)
+    // Berisi pendaftaran event listener (pemantau aksi pengguna)
     $(document).ready(function () {
 
-
-      // update preview saat qty diketik 
+      // Event listener: Memperbarui nilai subtotal preview secara langsung saat nilai input qty diketik / diubah
       $("#qty").on("input", function () {
         updateSubtotalPreview();
       });
 
+      // Event listener: Memperbarui nilai subtotal preview saat pengguna memilih opsi tipe yang berbeda
       $("#tipe").on("change", function () {
         updateSubtotalPreview();
       });
 
-      // tombol tambah
+      // Event listener: Aksi utama ketika tombol "tambah" diklik.
+      // Alur: Ambil semua data dari form input -> Validasi kelengkapan data -> Buat elemen HTML baris (<tr>) baru -> Sisipkan ke tabel -> Hitung ulang keranjang -> Reset form input.
       $("#tambah").click(function () {
         let x = $("#kode").val().trim();
         let y = $("#nama").val().trim();
@@ -312,12 +343,15 @@
           tambahan = 0;
         }
 
-        if (x === "") { alert("Pilih item dulu!"); return; }
-        if (q <= 0) { alert("Isi Qty terlebih dahulu!"); return; }
-        if (t === "") { alert("Pilih tipe terlebih dahulu!"); return; }
+        // Validasi data: Mencegah item ditambahkan jika ada informasi krusial yang kosong
+        if (x === "") { alert("Pilih item dulu!"); return; } // Item belum dipilih dari master item
+        if (q <= 0) { alert("Isi Qty terlebih dahulu!"); return; } // Jumlah harus lebih besar dari 0
+        if (t === "") { alert("Pilih tipe terlebih dahulu!"); return; } // Tipe wajib dipilih
 
+        // Menghitung subtotal riil untuk baris yang akan ditambahkan ke tabel
         let subtotal = (z + tambahan) * q;
 
+        // Membuat struktur elemen baris tabel (HTML) baru yang berisi data input dengan template literal
         let tbltr = `<tr>
           <td><button class="btn btn-danger hapus">X</button></td>
           <td>${x}</td>
@@ -329,24 +363,30 @@
           <td class="subtotal">Rp ${subtotal}</td>
         </tr>`;
 
+        // Menyisipkan baris HTML baru tersebut ke bagian bawah tabel daftar keranjang (tbody)
         $("#tbldata tbody").append(tbltr);
+        
+        // Memanggil fungsi hitung total untuk memperbarui semua nominal transaksi (termasuk grandtotal)
         hitungtotal();
 
-        // reset input row
+        // Reset: Mengosongkan form input persiapan agar siap untuk menambah item selanjutnya
         $("#kode, #nama, #satuan, #harga, #tipe, #qty, #subtotal_preview").val("");
       });
 
-      // tombol hapus
+      // Event listener: Aksi untuk tombol "X" (hapus baris) pada item di tabel keranjang.
+      // Dicatat pada elemen tabel induk ("#tbldata") karena tombol ".hapus" ditambahkan secara dinamis.
+      // Alur: Mengidentifikasi tombol mana yang diklik -> Mencari baris <tr> pembungkus terdekat -> Menghapus elemen baris tersebut dari HTML -> Hitung ulang total.
       $("#tbldata").on("click", ".hapus", function () {
         $(this).closest('tr').remove();
-        hitungtotal();
+        hitungtotal(); // Penting: karena ada baris yang dihapus, total harus dihitung ulang
       });
 
-
+      // Event listener: Memperbarui hitungan total dan kembalian seketika pengguna mengubah nilai persen diskon
       $("#diskon_persen").on("input", function () {
         hitungtotal();
       });
 
+      // Event listener: Memperbarui nilai kembalian seketika pengguna mengetikkan/mengubah nominal uang pembayaran
       $("#bayar").on("input", function () {
         hitungtotal();
       });
