@@ -59,10 +59,10 @@
         <label class="mb-1">tipe</label>
         <select class="form-select" id="tipe">
           <option value="" disabled selected>tipe</option>
-          <option value="S">S (+1000)</option>
-          <option value="M">M (+2000)</option>
-          <option value="L">L (+3000)</option>
-          <option value="XL">XL (+4000)</option>
+          <option value="S">S</option>
+          <option value="M">M</option>
+          <option value="L">L</option>
+          <option value="XL">XL</option>
         </select>
       </div>
       <div class="col-sm-2">
@@ -204,7 +204,8 @@
       $("#satuan").val(satuan);
       $("#harga").val(harga);
       $("#tipe").val(tipe);
-      $("#qty").val("").focus();
+      $("#qty").val(1).focus();
+      updateSubtotalPreview();
       $("#subtotal_preview").val("");
     }
 
@@ -212,9 +213,10 @@
       let total = 0;
 
       $("#tbldata tbody tr").each(function () {
-        let harga = parseFloat($(this).find(".harga").text()) || 0;
-        let qty = parseInt($(this).find(".qty").text()) || 1;
-        let tipe = $(this).find(".tipe").text() || "";
+        let row = $(this);
+        let harga = parseFloat(row.find(".harga").text()) || 0;
+        let qty = parseInt(row.find(".qty").text()) || 1;
+        let tipe = row.find(".tipe").text() || "";
         let tambahan = 0;
         if (tipe != "") {
           if (tipe === "S") {
@@ -277,8 +279,13 @@
 
     $(document).ready(function () {
 
+
       // update preview saat qty diketik 
       $("#qty").on("input", function () {
+        updateSubtotalPreview();
+      });
+
+      $("#tipe").on("change", function () {
         updateSubtotalPreview();
       });
 
@@ -290,12 +297,26 @@
         let z = parseFloat($("#harga").val()) || 0;
         let q = parseInt($("#qty").val()) || 0;
         let t = $("#tipe").val().trim();
+        let tambahan = 0;
+        if (t != "") {
+          if (t === "S") {
+            tambahan = 1000;
+          } else if (t === "M") {
+            tambahan = 2000;
+          } else if (t === "L") {
+            tambahan = 3000;
+          } else if (t === "XL") {
+            tambahan = 4000;
+          }
+        } else {
+          tambahan = 0;
+        }
 
         if (x === "") { alert("Pilih item dulu!"); return; }
         if (q <= 0) { alert("Isi Qty terlebih dahulu!"); return; }
         if (t === "") { alert("Pilih tipe terlebih dahulu!"); return; }
 
-        let subtotal = (z + t) * q;
+        let subtotal = (z + tambahan) * q;
 
         let tbltr = `<tr>
           <td><button class="btn btn-danger hapus">X</button></td>
