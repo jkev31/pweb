@@ -37,14 +37,18 @@
     </div><br> <!-- Header form selesai -->
 
 
-    <!-- Input Row -->
+    <!-- Input Row: Menampung input data barang sebelum dimasukkan ke keranjang belanja -->
+    <!-- Input-input ini memiliki ID unik yang digunakan oleh JavaScript untuk mengambil nilainya. -->
     <div class="row mb-3 mt-3">
       <div class="col-sm-1">
         <label class="mb-1">kode</label>
+        <!-- Input kode bersifat readonly (tidak bisa diketik manual). -->
+        <!-- Atribut data-bs-toggle="modal" dan data-bs-target="#masteritem" memicu modal Bootstrap terbuka saat input ini diklik -->
         <input type="text" class="form-control" id="kode" data-bs-toggle="modal" data-bs-target="#masteritem" readonly>
       </div>
       <div class="col-sm-2">
         <label class="mb-1">nama</label>
+        <!-- Field otomatis terisi oleh fungsi tambahtabel() di JavaScript saat item dipilih dari modal -->
         <input type="text" class="form-control" id="nama" readonly>
       </div>
       <div class="col-sm-1">
@@ -53,10 +57,12 @@
       </div>
       <div class="col-sm-2">
         <label class="mb-1">harga</label>
+        <!-- Input number untuk harga dasar item (otomatis terisi) -->
         <input type="number" class="form-control" id="harga" readonly>
       </div>
       <div class="col-sm-1">
         <label class="mb-1">tipe</label>
+        <!-- Elemen Select untuk memilih ukuran. Perubahan nilai (event 'change') akan ditangkap JS untuk update subtotal -->
         <select class="form-select" id="tipe">
           <option value="" disabled selected>tipe</option>
           <option value="S">S</option>
@@ -67,20 +73,24 @@
       </div>
       <div class="col-sm-2">
         <label class="mb-1">qty</label>
+        <!-- Input untuk jumlah barang. Perubahan (event 'input') ditangkap JS untuk update subtotal preview -->
         <input type="number" class="form-control" id="qty" placeholder="Qty" min="1" value="">
       </div>
       <div class="col-sm-2">
         <label class="mb-1">subtotal</label>
+        <!-- Field readonly untuk menampilkan estimasi subtotal dari item yang sedang diinput sebelum ditambahkan -->
         <input type="number" class="form-control bg-body-secondary" id="subtotal_preview" placeholder="Subtotal"
           readonly>
       </div>
       <div class="col-sm-1 d-flex align-items-end">
+        <!-- Tombol tambah dengan ID 'tambah'. JS mendengarkan event klik tombol ini untuk memasukkan data ke dalam tabel -->
         <button id="tambah" class="btn btn-primary w-100">tambah</button>
       </div>
     </div>
 
 
-    <!-- Table -->
+    <!-- Table: Digunakan sebagai wadah daftar keranjang belanja -->
+    <!-- JS menggunakan ID 'tbldata' untuk menargetkan tabel ini. -->
     <table class="table table-bordered border-dark table-hover table-striped" id="tbldata">
       <thead class="table-dark text-light">
         <tr>
@@ -94,26 +104,32 @@
           <th>subtotal</th>
         </tr>
       </thead>
+      <!-- Elemen <tbody> dibiarkan kosong di HTML. JavaScript akan menambahkan elemen <tr> (baris) ke dalam tbody ini secara dinamis melalui tombol 'tambah' -->
       <tbody></tbody>
       <tfoot>
+        <!-- Bagian footer tabel untuk menampilkan kalkulasi akhir transaksi -->
         <tr>
           <td colspan="6"></td>
           <td>Total</td>
+          <!-- Elemen <span> digunakan karena merupakan wadah teks inline. ID 'tot' dipakai JS untuk menampilkan nilai akumulasi subtotal -->
           <td>Rp <span id="tot">0</span></td>
         </tr>
         <tr>
           <td colspan="6"></td>
           <td>
             Diskon
+            <!-- Input diskon langsung memicu event di JS untuk menghitung ulang kalkulasi saat nilainya diubah -->
             <input type="number" id="diskon_persen" class="form-control form-control-sm mt-1" placeholder="0" min="0"
               max="100" style="width:70px; display:inline-block;">
             <span class="text-muted">%</span>
           </td>
+          <!-- Span ID 'diskon_nominal' dipakai JS untuk menampilkan konversi diskon persen ke nominal Rupiah -->
           <td>Rp <span id="diskon_nominal">0</span></td>
         </tr>
         <tr>
           <td colspan="6"></td>
           <td>Grandtotal</td>
+          <!-- Span ID 'grandtotal' dipakai JS untuk menampilkan Total dikurangi Diskon Nominal -->
           <td>Rp <span id="grandtotal">0</span></td>
         </tr>
         <tr>
@@ -121,12 +137,14 @@
           <td>Bayar</td>
           <td class="d-flex align-items-center gap-2">
             <span>Rp</span>
+            <!-- Input nominal bayar dari kasir. JS mendengarkan perubahan ini untuk menghitung uang kembali -->
             <input type="number" id="bayar" class="form-control">
           </td>
         </tr>
         <tr>
           <td colspan="6"></td>
           <td>Kembalian</td>
+          <!-- Span ID 'kembali' untuk hasil output penghitungan (Bayar - Grandtotal) oleh JS -->
           <td>Rp <span id="kembali">0</span></td>
         </tr>
       </tfoot>
@@ -135,7 +153,8 @@
 
 
 
-  <!-- The Modal -->
+  <!-- The Modal: Komponen pop-up (Bootstrap Modal) untuk menampung daftar referensi barang -->
+  <!-- Ditampilkan ketika input dengan data-bs-target="#masteritem" diklik -->
   <div class="modal fade" id="masteritem">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -153,7 +172,9 @@
               <th>Harga</th>
             </thead>
             <tbody>
+              <!-- Daftar barang statis di dalam modal -->
               <tr>
+                <!-- Tombol pilih mengeksekusi dua aksi: 1) data-bs-dismiss="modal" untuk menutup pop-up. 2) onclick="tambahtabel(...)" untuk melempar parameter data barang ke fungsi JS -->
                 <td><button class="btn btn-success" data-bs-dismiss="modal"
                     onclick="tambahtabel('m001','produk 01', 'pcs', '59000')">pilih</button></td>
                 <td>m001</td>
