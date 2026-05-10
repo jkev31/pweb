@@ -186,16 +186,18 @@
       $("#nama").val(nama);
       $("#satuan").val(satuan);
       $("#harga").val(harga);
-      $("#qty").val("").focus();
-      $("#subtotal_preview").val("");
+      $("#qty").val(1).focus();
+      updateSubtotalPreview();
     }
 
     function hitungtotal() {
       let total = 0;
 
       $("#tbldata tbody tr").each(function () {
-        let harga = parseFloat($(this).find(".harga").text()) || 0;
-        let qty = parseInt($(this).find(".qty").text()) || 1;
+        let row = $(this);
+
+        let harga = parseFloat(row.find(".harga").text()) || 0;
+        let qty = parseInt(row.find(".qty").text()) || 1;
         let subtotal = harga * qty;
         $(this).find(".subtotal").text("Rp " + subtotal);
         total += subtotal;

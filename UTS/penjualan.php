@@ -232,7 +232,6 @@
       $("#qty").val(1).focus();
       // Memperbarui nilai subtotal preview berdasarkan data yang baru masuk
       updateSubtotalPreview();
-      $("#subtotal_preview").val("");
     }
 
     // Fungsi utama untuk menghitung ulang semua rincian harga pada tabel keranjang belanja.
