@@ -227,7 +227,6 @@
       $("#nama").val(nama);
       $("#satuan").val(satuan);
       $("#harga").val(harga);
-      $("#tipe").val(tipe);
       // Mengisi nilai default qty = 1 dan memindahkan kursor (fokus) ke input qty
       $("#qty").val(1).focus();
       // Memperbarui nilai subtotal preview berdasarkan data yang baru masuk
