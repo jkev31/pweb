@@ -64,7 +64,6 @@
         <label class="mb-1">tipe</label>
         <!-- Elemen Select untuk memilih ukuran. Perubahan nilai (event 'change') akan ditangkap JS untuk update subtotal -->
         <select class="form-select" id="tipe">
-          <option value="" disabled selected>tipe</option>
           <option value="S">S</option>
           <option value="M">M</option>
           <option value="L">L</option>
@@ -227,6 +226,10 @@
       $("#nama").val(nama);
       $("#satuan").val(satuan);
       $("#harga").val(harga);
+      // Mengisi nilai default tipe S
+      $("#tipe").val("S");
+      // Memperbarui nilai subtotal preview berdasarkan data yang baru masuk
+      updateSubtotalPreview();
       // Mengisi nilai default qty = 1 dan memindahkan kursor (fokus) ke input qty
       $("#qty").val(1).focus();
       // Memperbarui nilai subtotal preview berdasarkan data yang baru masuk
