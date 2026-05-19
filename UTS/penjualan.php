@@ -46,7 +46,7 @@
         <!-- Atribut data-bs-toggle="modal" dan data-bs-target="#masteritem" memicu modal Bootstrap terbuka saat input ini diklik -->
         <input type="text" class="form-control" id="kode" data-bs-toggle="modal" data-bs-target="#masteritem" readonly>
       </div>
-      <div class="col-sm-2">
+      <div class="col-sm-1">
         <label class="mb-1">nama</label>
         <!-- Field otomatis terisi oleh fungsi tambahtabel() di JavaScript saat item dipilih dari modal -->
         <input type="text" class="form-control" id="nama" readonly>
@@ -64,10 +64,19 @@
         <label class="mb-1">tipe</label>
         <!-- Elemen Select untuk memilih ukuran. Perubahan nilai (event 'change') akan ditangkap JS untuk update subtotal -->
         <select class="form-select" id="tipe">
-          <option value="S">S</option>
+          <option value="S" selected>S</option>
           <option value="M">M</option>
           <option value="L">L</option>
           <option value="XL">XL</option>
+        </select>
+      </div>
+      <div class="col-sm-1">
+        <label class="mb-1">Diskon</label>
+        <select class="form-select" id="diskon">
+          <option value="0" selected>0</option>
+          <option value="500">500</option>
+          <option value="1000">1000</option>
+          <option value="5000">5000</option>
         </select>
       </div>
       <div class="col-sm-2">
@@ -99,6 +108,7 @@
           <th>satuan</th>
           <th>harga</th>
           <th>tipe</th>
+          <th>diskon</th>
           <th>qty</th>
           <th>subtotal</th>
         </tr>
@@ -108,13 +118,13 @@
       <tfoot>
         <!-- Bagian footer tabel untuk menampilkan kalkulasi akhir transaksi -->
         <tr>
-          <td colspan="6"></td>
+          <td colspan="7"></td>
           <td>Total</td>
           <!-- Elemen <span> digunakan karena merupakan wadah teks inline. ID 'tot' dipakai JS untuk menampilkan nilai akumulasi subtotal -->
           <td>Rp <span id="tot">0</span></td>
         </tr>
         <tr>
-          <td colspan="6"></td>
+          <td colspan="7"></td>
           <td>
             Diskon
             <!-- Input diskon langsung memicu event di JS untuk menghitung ulang kalkulasi saat nilainya diubah -->
@@ -126,13 +136,13 @@
           <td>Rp <span id="diskon_nominal">0</span></td>
         </tr>
         <tr>
-          <td colspan="6"></td>
+          <td colspan="7"></td>
           <td>Grandtotal</td>
           <!-- Span ID 'grandtotal' dipakai JS untuk menampilkan Total dikurangi Diskon Nominal -->
           <td>Rp <span id="grandtotal">0</span></td>
         </tr>
         <tr>
-          <td colspan="6"></td>
+          <td colspan="7"></td>
           <td>Bayar</td>
           <td class="d-flex align-items-center gap-2">
             <span>Rp</span>
@@ -141,7 +151,7 @@
           </td>
         </tr>
         <tr>
-          <td colspan="6"></td>
+          <td colspan="7"></td>
           <td>Kembalian</td>
           <!-- Span ID 'kembali' untuk hasil output penghitungan (Bayar - Grandtotal) oleh JS -->
           <td>Rp <span id="kembali">0</span></td>
@@ -230,6 +240,8 @@
       $("#tipe").val("S");
       // Memperbarui nilai subtotal preview berdasarkan data yang baru masuk
       updateSubtotalPreview();
+      // Mengisi nilai default diskon 0
+      $("#diskon").val(0);
       // Mengisi nilai default qty = 1 dan memindahkan kursor (fokus) ke input qty
       $("#qty").val(1).focus();
       // Memperbarui nilai subtotal preview berdasarkan data yang baru masuk
@@ -249,6 +261,7 @@
         let harga = parseFloat(row.find(".harga").text()) || 0;
         let qty = parseInt(row.find(".qty").text()) || 1;
         let tipe = row.find(".tipe").text() || "";
+        let diskon = parseFloat(row.find(".diskon").text()) || 0;
         let tambahan = 0;
         
         // Menentukan tambahan harga berdasarkan tipe/ukuran
@@ -266,7 +279,7 @@
           tambahan = 0;
         }
         // Menghitung subtotal per baris: (harga dasar + biaya tambahan) dikali jumlah barang
-        let subtotal = (harga + tambahan) * qty;
+        let subtotal = (harga + tambahan - diskon) * qty;
         
         // Menampilkan subtotal ke kolom subtotal di baris tersebut
         $(this).find(".subtotal").text("Rp " + subtotal);
@@ -306,6 +319,7 @@
       let harga = parseFloat($("#harga").val()) || 0;
       let qty = parseInt($("#qty").val()) || 0;
       let tipe = $("#tipe").val().trim();
+      let diskon = parseInt($("#diskon").val()) || 0;
       let tambahan = 0;
       
       // Menentukan biaya tambahan sesuai tipe/ukuran
@@ -324,7 +338,7 @@
       }
       
       // Menampilkan hasil kalkulasi pratinjau ke field subtotal, jika qty valid (>0)
-      $("#subtotal_preview").val(qty > 0 ? (harga + tambahan) * qty : "");
+      $("#subtotal_preview").val(qty > 0 ? (harga + tambahan - diskon) * qty : "");
     }
 
     // Blok kode utama yang dijalankan saat struktur HTML dokumen selesai dimuat (DOM Ready)
@@ -341,6 +355,11 @@
         updateSubtotalPreview();
       });
 
+      // Event listener: Memperbarui nilai subtotal preview saat pengguna mengubah nilai diskon
+      $("#diskon").on("change", function () {
+        updateSubtotalPreview();
+      });
+
       // Event listener: Aksi utama ketika tombol "tambah" diklik.
       // Alur: Ambil semua data dari form input -> Validasi kelengkapan data -> Buat elemen HTML baris (<tr>) baru -> Sisipkan ke tabel -> Hitung ulang keranjang -> Reset form input.
       $("#tambah").click(function () {
@@ -350,6 +369,7 @@
         let z = parseFloat($("#harga").val()) || 0;
         let q = parseInt($("#qty").val()) || 0;
         let t = $("#tipe").val().trim();
+        let d = parseInt($("#diskon").val()) || 0;
         let tambahan = 0;
         if (t != "") {
           if (t === "S") {
@@ -369,6 +389,13 @@
         if (x === "") { alert("Pilih item dulu!"); return; } // Item belum dipilih dari master item
         if (q <= 0) { alert("Isi Qty terlebih dahulu!"); return; } // Jumlah harus lebih besar dari 0
         if (t === "") { alert("Pilih tipe terlebih dahulu!"); return; } // Tipe wajib dipilih
+        if (d < 0) { 
+          alert("Diskon tidak boleh negatif!"); 
+          return; 
+        }  else if (d > z) { 
+          alert("Diskon tidak boleh lebih dari harga!"); 
+          return; 
+        } // Diskon tidak boleh negatif
 
         // Menghitung subtotal riil untuk baris yang akan ditambahkan ke tabel
         let subtotal = (z + tambahan) * q;
@@ -381,6 +408,7 @@
           <td>${s}</td>
           <td class="harga">${z}</td>
           <td class="tipe">${t}</td>
+          <td class="diskon">${d}</td>
           <td class="qty">${q}</td>
           <td class="subtotal">Rp ${subtotal}</td>
         </tr>`;
@@ -392,7 +420,7 @@
         hitungtotal();
 
         // Reset: Mengosongkan form input persiapan agar siap untuk menambah item selanjutnya
-        $("#kode, #nama, #satuan, #harga, #tipe, #qty, #subtotal_preview").val("");
+        $("#kode, #nama, #satuan, #harga, #tipe, #diskon, #qty, #subtotal_preview").val("");
       });
 
       // Event listener: Aksi untuk tombol "X" (hapus baris) pada item di tabel keranjang.
