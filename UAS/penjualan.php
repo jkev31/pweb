@@ -137,6 +137,7 @@
         </tr>
       </tfoot>
     </table>
+    <button type="button" id="save" class="btn btn-success" data-bs-dismiss="modal">Save</button>
   </div>
 
 
@@ -345,5 +346,52 @@
       });
 
     });
+
+    $("#tambah").click(function() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth() + 1;
+      const day = now.getDate();
+      const hour = now.getHours();
+      const minute = now.getMinutes();
+      const second = now.getSeconds();
+
+      let kodepj = "pj"+year+""+month+""+day+""+hour+""+minute+""+second;
+      let tanggal = $("#tanggal").val();
+      let konsumen = $("#konsumen").val();
+      let telp = $("#notelp").val();
+      let keterangan = $("#keterangan").val();
+      let total = $("#tot").text();
+      let diskon = $("#diskon_nominal").text();
+      let bayar = $("#bayar").val();
+      let kembali = $("#kembali").text();
+      var formdata = new FormData();
+      formdata.append('kodepj',kodepj);
+      formdata.append('tanggal',tanggal);
+      formdata.append('konsumen',konsumen);
+      formdata.append('telp',telp);
+      formdata.append('ket',keterangan);
+      formdata.append('total',total);
+      formdata.append('diskon',diskon);
+      formdata.append('grandtotal',grandtotal);
+      
+      $.ajax({
+        type: 'POST',
+        url: 'php07.php',
+        data: formdata, // Mengambil semua data form
+        processData:false,
+        contentType:false,
+        success: function(response) {
+            console.log('Sukses:', response);
+            alert('Data berhasil dikirim!');
+            window.location.href = "penjualan.php";
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+        }
+      });
+    });
+      
+
   </script>
 
