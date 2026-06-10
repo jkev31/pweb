@@ -7,6 +7,9 @@ include 'connect.php';
 */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save') {
     header('Content-Type: application/json');
+    // $_POST adalah array asosiatif yang berisi data yang dikirim melalui metode POST
+    // $_GET adalah array asosiatif yang berisi data yang dikirim melalui metode GET
+    
 
     // Generate kode penjualan unik
     $kodepj     = 'pj' . date('YmdHis') . rand(10, 99);
@@ -22,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save'
     // Insert ke masterpenjualan
     $stmt = $conn->prepare(
         "INSERT INTO masterpenjualan (kodepj, tanggal, konsumen, telp, ket, total, diskon, grandtotal)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)" 
     );
     $stmt->bind_param('sssssddd', $kodepj, $tanggal, $konsumen, $telp, $ket, $total, $diskon, $grandtotal);
 
@@ -46,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save'
         }
     }
 
-    echo json_encode(['success' => true, 'kodepj' => $kodepj]);
+    echo json_encode(['success' => true, 'kodepj' => $kodepj]); //json_encode = mengubah data menjadi json, agar bisa dikirim ke javascript
     exit;
 }
 
@@ -82,7 +85,7 @@ while ($r = $result->fetch_assoc()) {
   <div class="d-flex align-items-end gap-3 mb-3 flex-wrap">
 
     <div>
-      <button class="btn btn-dark" id="btn-tambah-penjualan">
+      <button class="btn btn-primary" id="btn-tambah-penjualan">
         Tambah Penjualan
       </button>
     </div>
@@ -240,7 +243,7 @@ while ($r = $result->fetch_assoc()) {
       </div><!-- /modal-body -->
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
       </div>
 
     </div>

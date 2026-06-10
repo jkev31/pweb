@@ -4,7 +4,7 @@ include 'connect.php';
 // Ambil daftar item dari tabel items untuk master item modal
 $items_result = $conn->query("SELECT kode, nama, satuan, hjual FROM items ORDER BY kode");
 $db_items = [];
-while ($row = $items_result->fetch_assoc()) {
+while ($row = $items_result->fetch_assoc()) { // fetch_assoc() = mengambil data dari database dalam bentuk array asosiatif
     $db_items[] = $row;
 }
 ?>
@@ -183,8 +183,8 @@ while ($row = $items_result->fetch_assoc()) {
                   <td>
                     <button class="btn btn-success btn-sm" data-bs-dismiss="modal"
                       onclick="tambahtabel(
-                        '<?= htmlspecialchars($item['kode'],  ENT_QUOTES) ?>',
-                        '<?= htmlspecialchars($item['nama'],  ENT_QUOTES) ?>',
+                        '<?= htmlspecialchars($item['kode'],  ENT_QUOTES) ?>', // htmlspecialchars = membersihkan karakter khusus agar tidak terjadi kesalahan saat dimasukkan ke dalam kode javascript (seperti tanda kutip)
+                        '<?= htmlspecialchars($item['nama'],  ENT_QUOTES) ?>', // ENT_QUOTES = mengubah tanda kutip menjadi entity html
                         '<?= htmlspecialchars($item['satuan'],ENT_QUOTES) ?>',
                         '<?= (float)$item['hjual'] ?>'
                       )">Pilih</button>
@@ -209,16 +209,19 @@ while ($row = $items_result->fetch_assoc()) {
 
 
   <script>
-    /* ── Helper: muat halaman ke #isi (SPA) atau navigasi langsung ── */
+    /* 
+    Helper: muat halaman ke #isi (SPA) atau navigasi langsung
+    SPA (Single Page Application) = halaman yang memuat konten tanpa me-refresh seluruh halaman
+    */
     function loadPage(url) {
       if ($('#isi').length) {
-        $('#isi').load(url);
+        $('#isi').load(url); // load = memuat halaman
       } else {
-        window.location.href = url;
+        window.location.href = url; // window.location.href = mengarahkan ke halaman
       }
     }
  
-    /* ── Dipanggil saat pengguna klik Pilih di modal Master Item ── */
+    /* Dipanggil saat pengguna klik Pilih di modal Master Item */
     function tambahtabel(kode, nama, satuan, harga) {
       $("#kode").val(kode);
       $("#nama").val(nama);
@@ -228,7 +231,7 @@ while ($row = $items_result->fetch_assoc()) {
       updateSubtotalPreview();
     }
  
-    /* ── Hitung ulang seluruh total keranjang belanja ── */
+    /* Hitung ulang seluruh total keranjang belanja */
     function hitungtotal() {
       var total = 0;
  
@@ -255,7 +258,7 @@ while ($row = $items_result->fetch_assoc()) {
       $("#kembali").text(kembali.toLocaleString('id-ID'));
     }
  
-    /* ── Preview subtotal sebelum item ditambahkan ke tabel ── */
+    /* Preview subtotal sebelum item ditambahkan ke tabel */
     function updateSubtotalPreview() {
       var harga = parseFloat($("#harga").val()) || 0;
       var qty   = parseInt($("#qty").val())     || 0;
@@ -269,7 +272,7 @@ while ($row = $items_result->fetch_assoc()) {
         updateSubtotalPreview();
       });
  
-      /* ── Tombol Tambah: masukkan item ke keranjang ── */
+      /* Tombol Tambah: masukkan item ke keranjang */
       $("#tambah").click(function () {
         var x = $("#kode").val().trim();
         var y = $("#nama").val().trim();
@@ -308,27 +311,28 @@ while ($row = $items_result->fetch_assoc()) {
         hitungtotal();
       });
  
-      /* ── Tombol Close: kembali ke savepenjualan.php tanpa menyimpan ── */
+      /* Tombol Close: kembali ke savepenjualan.php tanpa menyimpan */
       $("#close").click(function () {
         loadPage('savepenjualan.php');
       });
  
-      /* ── Tombol Save: validasi → kumpulkan data → AJAX POST → kembali ── */
+      /* Tombol Save: validasi → kumpulkan data → AJAX POST → kembali */
       $("#save").click(function () {
-        var tanggal  = $("#tanggal").val();
-        var konsumen = $("#konsumen").val().trim();
-        var telp     = $("#notelp").val().trim();
-        var ket      = $("#keterangan").val().trim();
+        let tanggal  = $("#tanggal").val();
+        let konsumen = $("#konsumen").val().trim();
+        let telp     = $("#notelp").val().trim();
+        let ket      = $("#keterangan").val().trim();
  
         // Validasi field wajib
         if (!tanggal)  { alert("Isi tanggal terlebih dahulu!");        return; }
         if (!konsumen) { alert("Isi nama konsumen terlebih dahulu!");   return; }
  
         // Validasi ada item di keranjang
-        var items = [];
+        let items = [];
         $("#tbldata tbody tr").each(function () {
-          var row          = $(this);
-          var subtotalText = row.find(".subtotal").text().replace("Rp ", "").replace(/\./g, "");
+          let row          = $(this);
+          let subtotalText = row.find(".subtotal").text().replace("Rp ", "").replace(/\./g, ""); 
+          // replace(/\./g = mengganti karakter titik (.) secara global (g))
           items.push({
             kode    : row.find("td:eq(1)").text().trim(),
             nama    : row.find("td:eq(2)").text().trim(),
@@ -345,13 +349,13 @@ while ($row = $items_result->fetch_assoc()) {
         }
  
         // Ambil nilai total, diskon, grandtotal dari footer tabel
-        var totalText      = $("#tot").text().replace(/\./g, "");
-        var diskonText     = $("#diskon_nominal").text().replace(/\./g, "");
-        var grandtotalText = $("#grandtotal").text().replace(/\./g, "");
+        let totalText      = $("#tot").text().replace(/\./g, "");
+        let diskonText     = $("#diskon_nominal").text().replace(/\./g, "");
+        let grandtotalText = $("#grandtotal").text().replace(/\./g, "");
  
-        var total      = parseFloat(totalText)      || 0;
-        var diskon     = parseFloat(diskonText)     || 0;
-        var grandtotal = parseFloat(grandtotalText) || 0;
+        let total      = parseFloat(totalText)      || 0;
+        let diskon     = parseFloat(diskonText)     || 0;
+        let grandtotal = parseFloat(grandtotalText) || 0;
  
         // Kirim ke savepenjualan.php via AJAX POST
         $.ajax({
