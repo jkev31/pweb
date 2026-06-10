@@ -57,7 +57,7 @@
             $("#isi").load("pembelian.php");
         });
         $("#penjualan").click(function(){
-            $("#isi").load("penjualan.php");
+            $("#isi").load("savepenjualan.php");
         });
     });
 </script>

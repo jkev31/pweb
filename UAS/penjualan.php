@@ -1,6 +1,15 @@
+<?php
+include 'connect.php';
+ 
+// Ambil daftar item dari tabel items untuk master item modal
+$items_result = $conn->query("SELECT kode, nama, satuan, hjual FROM items ORDER BY kode");
+$db_items = [];
+while ($row = $items_result->fetch_assoc()) {
+    $db_items[] = $row;
+}
+?>
 
-
-  <div class="container-fluid mt-3">
+  <div class="container-fluid mt-3" id="trans">
     <!-- Header -->
     <div class="mb-3"> <!-- div untuk header elements, mb-3 = margin bottom 3 -->
 
@@ -138,6 +147,7 @@
       </tfoot>
     </table>
     <button type="button" id="save" class="btn btn-success" data-bs-dismiss="modal">Save</button>
+    <button type="button" id="close" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
   </div>
 
 
@@ -161,40 +171,31 @@
               <th>Harga</th>
             </thead>
             <tbody>
-              <!-- Daftar barang statis di dalam modal -->
+              <?php if (empty($db_items)): ?>
               <tr>
-                <!-- Tombol pilih mengeksekusi dua aksi: 1) data-bs-dismiss="modal" untuk menutup pop-up. 2) onclick="tambahtabel(...)" untuk melempar parameter data barang ke fungsi JS -->
-                <td><button class="btn btn-success" data-bs-dismiss="modal"
-                    onclick="tambahtabel('m001','produk 01', 'pcs', '59000')">pilih</button></td>
-                <td>m001</td>
-                <td>produk 01</td>
-                <td>pcs</td>
-                <td>59000</td>
+                <td colspan="5" class="text-center text-muted">
+                  Tidak ada item tersedia.
+                </td>
               </tr>
-              <tr>
-                <td><button class="btn btn-success" data-bs-dismiss="modal"
-                    onclick="tambahtabel('m002','produk 02', 'pcs', '19000')">pilih</button></td>
-                <td>m002</td>
-                <td>produk 02</td>
-                <td>pcs</td>
-                <td>19000</td>
-              </tr>
-              <tr>
-                <td><button class="btn btn-success" data-bs-dismiss="modal"
-                    onclick="tambahtabel('m003','produk 03', 'pcs', '91000')">pilih</button></td>
-                <td>m003</td>
-                <td>produk 03</td>
-                <td>pcs</td>
-                <td>91000</td>
-              </tr>
-              <tr>
-                <td><button class="btn btn-success" data-bs-dismiss="modal"
-                    onclick="tambahtabel('m004','produk 04', 'pcs', '39000')">pilih</button></td>
-                <td>m004</td>
-                <td>produk 04</td>
-                <td>pcs</td>
-                <td>39000</td>
-              </tr>
+              <?php else: ?>
+                <?php foreach ($db_items as $item): ?>
+                <tr>
+                  <td>
+                    <button class="btn btn-success btn-sm" data-bs-dismiss="modal"
+                      onclick="tambahtabel(
+                        '<?= htmlspecialchars($item['kode'],  ENT_QUOTES) ?>',
+                        '<?= htmlspecialchars($item['nama'],  ENT_QUOTES) ?>',
+                        '<?= htmlspecialchars($item['satuan'],ENT_QUOTES) ?>',
+                        '<?= (float)$item['hjual'] ?>'
+                      )">Pilih</button>
+                  </td>
+                  <td><?= htmlspecialchars($item['kode'])   ?></td>
+                  <td><?= htmlspecialchars($item['nama'])   ?></td>
+                  <td><?= htmlspecialchars($item['satuan']) ?></td>
+                  <td><?= number_format((float)$item['hjual'], 0, ',', '.') ?></td>
+                </tr>
+                <?php endforeach; ?>
+              <?php endif; ?>
             </tbody>
           </table>
         </div>
@@ -208,189 +209,188 @@
 
 
   <script>
-    // Fungsi ini dipanggil ketika pengguna mengklik tombol "pilih" pada modal Master Item.
-    // Alur: Menerima data dari parameter -> Mengisi field input di form atas -> Menyiapkan qty default -> Mengkalkulasi preview.
-    function tambahtabel(kode, nama, satuan, harga) { 
-      // Mengisi field input dengan data parameter
+    /* ── Helper: muat halaman ke #isi (SPA) atau navigasi langsung ── */
+    function loadPage(url) {
+      if ($('#isi').length) {
+        $('#isi').load(url);
+      } else {
+        window.location.href = url;
+      }
+    }
+ 
+    /* ── Dipanggil saat pengguna klik Pilih di modal Master Item ── */
+    function tambahtabel(kode, nama, satuan, harga) {
       $("#kode").val(kode);
       $("#nama").val(nama);
       $("#satuan").val(satuan);
       $("#harga").val(harga);
       $("#qty").val(1).focus();
-      // Memperbarui nilai subtotal preview berdasarkan data yang baru masuk
       updateSubtotalPreview();
     }
-
-    // Fungsi utama untuk menghitung ulang semua rincian harga pada tabel keranjang belanja.
-    // Alur keseluruhan: Menghitung subtotal tiap baris -> Menjumlahkan total -> Mengurangi diskon -> Menentukan grandtotal -> Menghitung uang kembalian.
+ 
+    /* ── Hitung ulang seluruh total keranjang belanja ── */
     function hitungtotal() {
-      let total = 0;
-
-      // Melakukan iterasi (perulangan) pada setiap baris item yang ada di tabel keranjang
+      var total = 0;
+ 
       $("#tbldata tbody tr").each(function () {
-        let row = $(this);
-        
-        // Mengambil nilai dari kolom-kolom terkait di baris saat ini
-        let harga = parseFloat(row.find(".harga").text()) || 0;
-        let qty = parseInt(row.find(".qty").text()) || 1;
-        
-        // Menghitung subtotal per baris: (harga dasar + biaya tambahan) dikali jumlah barang
-        let subtotal = harga * qty;
-        
-        // Menampilkan subtotal ke kolom subtotal di baris tersebut
-        $(this).find(".subtotal").text("Rp " + subtotal);
-        
-        // Menambahkan subtotal baris ke total akumulasi seluruh belanjaan
+        var harga    = parseFloat($(this).find(".harga").text())    || 0;
+        var qty      = parseInt($(this).find(".qty").text())         || 1;
+        var subtotal = harga * qty;
+        $(this).find(".subtotal").text("Rp " + subtotal.toLocaleString('id-ID'));
         total += subtotal;
-        console.log(total);
       });
-
-      // Menampilkan total keseluruhan (sebelum diskon) ke tampilan
-      $("#tot").html("<b>" + total + "</b>");
-
-      // --- Alur Diskon ---
-      // Menghitung potongan harga berdasarkan persentase yang dimasukkan pengguna
-      let persen = parseFloat($("#diskon_persen").val()) || 0;
-      let nominal = Math.round(total * persen / 100); // Nominal potongan dalam Rupiah
-      $("#diskon_nominal").text(nominal);
-
-      // --- Alur Grandtotal ---
-      // Menghitung harga akhir setelah dikurangi nominal diskon
-      let grandtotal = total - nominal;
-      // Memastikan agar grandtotal tidak minus jika diskon terlalu besar
+ 
+      $("#tot").html("<b>" + total.toLocaleString('id-ID') + "</b>");
+ 
+      var persen  = parseFloat($("#diskon_persen").val()) || 0;
+      var nominal = Math.round(total * persen / 100);
+      $("#diskon_nominal").text(nominal.toLocaleString('id-ID'));
+ 
+      var grandtotal = total - nominal;
       if (grandtotal < 0) grandtotal = 0;
-      $("#grandtotal").text(grandtotal);
-
-      // --- Alur Kembalian ---
-      // Menghitung uang kembali jika nominal bayar lebih besar atau sama dengan grandtotal
-      let bayar = parseFloat($("#bayar").val()) || 0;
-      let kembali = bayar >= grandtotal ? bayar - grandtotal : 0;
-      $("#kembali").text(kembali);
+      $("#grandtotal").text(grandtotal.toLocaleString('id-ID'));
+ 
+      var bayar   = parseFloat($("#bayar").val()) || 0;
+      var kembali = bayar >= grandtotal ? bayar - grandtotal : 0;
+      $("#kembali").text(kembali.toLocaleString('id-ID'));
     }
-
-    // Fungsi untuk memproyeksikan (preview) subtotal pada form input sebelum item ditambahkan ke keranjang.
-    // Alur: Mengambil input harga, qty, dan tipe dari form -> Menghitung tambahan biaya -> Menampilkan kalkulasi di kotak subtotal.
+ 
+    /* ── Preview subtotal sebelum item ditambahkan ke tabel ── */
     function updateSubtotalPreview() {
-      // Mengambil data inputan sementara dari form (bukan tabel)
-      let harga = parseFloat($("#harga").val()) || 0;
-      let qty = parseInt($("#qty").val()) || 0;
-      
-      
-      // Menampilkan hasil kalkulasi pratinjau ke field subtotal, jika qty valid (>0)
-      $("#subtotal_preview").val(qty > 0 ? (harga ) * qty : "");
+      var harga = parseFloat($("#harga").val()) || 0;
+      var qty   = parseInt($("#qty").val())     || 0;
+      $("#subtotal_preview").val(qty > 0 ? harga * qty : "");
     }
-
-    // Blok kode utama yang dijalankan saat struktur HTML dokumen selesai dimuat (DOM Ready)
-    // Berisi pendaftaran event listener (pemantau aksi pengguna)
+ 
     $(document).ready(function () {
-
-      // Event listener: Memperbarui nilai subtotal preview secara langsung saat nilai input qty diketik / diubah
+ 
+      /* Preview subtotal saat qty berubah */
       $("#qty").on("input", function () {
         updateSubtotalPreview();
       });
-
-      // Event listener: Aksi utama ketika tombol "tambah" diklik.
-      // Alur: Ambil semua data dari form input -> Validasi kelengkapan data -> Buat elemen HTML baris (<tr>) baru -> Sisipkan ke tabel -> Hitung ulang keranjang -> Reset form input.
+ 
+      /* ── Tombol Tambah: masukkan item ke keranjang ── */
       $("#tambah").click(function () {
-        let x = $("#kode").val().trim();
-        let y = $("#nama").val().trim();
-        let s = $("#satuan").val().trim();
-        let z = parseFloat($("#harga").val()) || 0;
-        let q = parseInt($("#qty").val()) || 0;
-        // Validasi data: Mencegah item ditambahkan jika ada informasi krusial yang kosong
-        if (x === "") { alert("Pilih item dulu!"); return; } // Item belum dipilih dari master item
-        if (q <= 0) { alert("Isi Qty terlebih dahulu!"); return; } // Jumlah harus lebih besar dari 0
-        
-        
-
-        // Menghitung subtotal riil untuk baris yang akan ditambahkan ke tabel
-        let subtotal = z * q;
-
-        // Membuat struktur elemen baris tabel (HTML) baru yang berisi data input dengan template literal
-        let tbltr = `<tr>
-          <td><button class="btn btn-danger hapus">X</button></td>
-          <td>${x}</td>
-          <td>${y}</td>
-          <td>${s}</td>
-          <td class="harga">${z}</td>
-          <td class="qty">${q}</td>
-          <td class="subtotal">Rp ${subtotal}</td>
-        </tr>`;
-
-        // Menyisipkan baris HTML baru tersebut ke bagian bawah tabel daftar keranjang (tbody)
+        var x = $("#kode").val().trim();
+        var y = $("#nama").val().trim();
+        var s = $("#satuan").val().trim();
+        var z = parseFloat($("#harga").val()) || 0;
+        var q = parseInt($("#qty").val())     || 0;
+ 
+        if (x === "") { alert("Pilih item dulu!"); return; }
+        if (q <= 0)   { alert("Isi Qty terlebih dahulu!"); return; }
+ 
+        var subtotal = z * q;
+ 
+        var tbltr = '<tr>'
+          + '<td><button class="btn btn-danger btn-sm hapus">X</button></td>'
+          + '<td>'  + x + '</td>'
+          + '<td>'  + y + '</td>'
+          + '<td>'  + s + '</td>'
+          + '<td class="harga">' + z + '</td>'
+          + '<td class="qty">'   + q + '</td>'
+          + '<td class="subtotal">Rp ' + subtotal.toLocaleString('id-ID') + '</td>'
+          + '</tr>';
+ 
         $("#tbldata tbody").append(tbltr);
-        
-        // Memanggil fungsi hitung total untuk memperbarui semua nominal transaksi (termasuk grandtotal)
         hitungtotal();
-
-        // Reset: Mengosongkan form input persiapan agar siap untuk menambah item selanjutnya
         $("#kode, #nama, #satuan, #harga, #qty, #subtotal_preview").val("");
       });
-
-      // Event listener: Aksi untuk tombol "X" (hapus baris) pada item di tabel keranjang.
-      // Dicatat pada elemen tabel induk ("#tbldata") karena tombol ".hapus" ditambahkan secara dinamis.
-      // Alur: Mengidentifikasi tombol mana yang diklik -> Mencari baris <tr> pembungkus terdekat -> Menghapus elemen baris tersebut dari HTML -> Hitung ulang total.
+ 
+      /* Hapus baris dari keranjang */
       $("#tbldata").on("click", ".hapus", function () {
         $(this).closest('tr').remove();
-        hitungtotal(); // Penting: karena ada baris yang dihapus, total harus dihitung ulang
-      });
-
-      // Event listener: Memperbarui hitungan total dan kembalian seketika pengguna mengubah nilai persen diskon
-      $("#diskon_persen").on("input", function () {
         hitungtotal();
       });
-
-      // Event listener: Memperbarui nilai kembalian seketika pengguna mengetikkan/mengubah nominal uang pembayaran
-      $("#bayar").on("input", function () {
+ 
+      /* Hitung ulang saat diskon/bayar berubah */
+      $("#diskon_persen, #bayar").on("input", function () {
         hitungtotal();
       });
-
-    });
-
-    $("#tambah").click(function() {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = now.getMonth() + 1;
-      const day = now.getDate();
-      const hour = now.getHours();
-      const minute = now.getMinutes();
-      const second = now.getSeconds();
-
-      let kodepj = "pj"+year+""+month+""+day+""+hour+""+minute+""+second;
-      let tanggal = $("#tanggal").val();
-      let konsumen = $("#konsumen").val();
-      let telp = $("#notelp").val();
-      let keterangan = $("#keterangan").val();
-      let total = $("#tot").text();
-      let diskon = $("#diskon_nominal").text();
-      let bayar = $("#bayar").val();
-      let kembali = $("#kembali").text();
-      var formdata = new FormData();
-      formdata.append('kodepj',kodepj);
-      formdata.append('tanggal',tanggal);
-      formdata.append('konsumen',konsumen);
-      formdata.append('telp',telp);
-      formdata.append('ket',keterangan);
-      formdata.append('total',total);
-      formdata.append('diskon',diskon);
-      formdata.append('grandtotal',grandtotal);
-      
-      $.ajax({
-        type: 'POST',
-        url: 'php07.php',
-        data: formdata, // Mengambil semua data form
-        processData:false,
-        contentType:false,
-        success: function(response) {
-            console.log('Sukses:', response);
-            alert('Data berhasil dikirim!');
-            window.location.href = "penjualan.php";
-        },
-        error: function(xhr, status, error) {
-            console.error('Error:', error);
+ 
+      /* ── Tombol Close: kembali ke savepenjualan.php tanpa menyimpan ── */
+      $("#close").click(function () {
+        loadPage('savepenjualan.php');
+      });
+ 
+      /* ── Tombol Save: validasi → kumpulkan data → AJAX POST → kembali ── */
+      $("#save").click(function () {
+        var tanggal  = $("#tanggal").val();
+        var konsumen = $("#konsumen").val().trim();
+        var telp     = $("#notelp").val().trim();
+        var ket      = $("#keterangan").val().trim();
+ 
+        // Validasi field wajib
+        if (!tanggal)  { alert("Isi tanggal terlebih dahulu!");        return; }
+        if (!konsumen) { alert("Isi nama konsumen terlebih dahulu!");   return; }
+ 
+        // Validasi ada item di keranjang
+        var items = [];
+        $("#tbldata tbody tr").each(function () {
+          var row          = $(this);
+          var subtotalText = row.find(".subtotal").text().replace("Rp ", "").replace(/\./g, "");
+          items.push({
+            kode    : row.find("td:eq(1)").text().trim(),
+            nama    : row.find("td:eq(2)").text().trim(),
+            satuan  : row.find("td:eq(3)").text().trim(),
+            harga   : parseFloat(row.find(".harga").text())   || 0,
+            qty     : parseInt(row.find(".qty").text())        || 0,
+            subtotal: parseFloat(subtotalText)                 || 0
+          });
+        });
+ 
+        if (items.length === 0) {
+          alert("Tambahkan item terlebih dahulu!");
+          return;
         }
+ 
+        // Ambil nilai total, diskon, grandtotal dari footer tabel
+        var totalText      = $("#tot").text().replace(/\./g, "");
+        var diskonText     = $("#diskon_nominal").text().replace(/\./g, "");
+        var grandtotalText = $("#grandtotal").text().replace(/\./g, "");
+ 
+        var total      = parseFloat(totalText)      || 0;
+        var diskon     = parseFloat(diskonText)     || 0;
+        var grandtotal = parseFloat(grandtotalText) || 0;
+ 
+        // Kirim ke savepenjualan.php via AJAX POST
+        $.ajax({
+          url     : 'savepenjualan.php',
+          method  : 'POST',
+          data    : {
+            action    : 'save',
+            tanggal   : tanggal,
+            konsumen  : konsumen,
+            telp      : telp,
+            ket       : ket,
+            total     : total,
+            diskon    : diskon,
+            grandtotal: grandtotal,
+            items     : JSON.stringify(items)
+          },
+          dataType: 'json',
+          beforeSend: function () {
+            $("#save").prop('disabled', true).text('Menyimpan...');
+          },
+          success: function (res) {
+            if (res.success) {
+              alert('Data berhasil disimpan!\nKode: ' + res.kodepj);
+              loadPage('savepenjualan.php');
+            } else {
+              alert('Gagal menyimpan: ' + (res.error || 'Unknown error'));
+              $("#save").prop('disabled', false).text('Save');
+            }
+          },
+          error: function () {
+            alert('Terjadi kesalahan koneksi. Silakan coba lagi.');
+            $("#save").prop('disabled', false).text('Save');
+          }
+        });
       });
-    });
+ 
+    }); // end document.ready
+
+    
       
 
   </script>
