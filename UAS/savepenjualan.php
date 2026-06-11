@@ -276,14 +276,17 @@ $(document).ready(function () {
           type: 'POST',
           contentType: 'application/json',
           data: JSON.stringify({ datatable }),
-          dataType: 'json'
-        })
-        .done(function(data) {
-            console.log('Success:', data);
-        })
-        // .fail(function(xhr, status, error) {
-        //     console.error('Error:', error);
-        // });
+          xhrFields: { responseType: 'blob' },
+          success: function(response) {
+            const file = new Blob([response], {
+              type: 'application/pdf'
+            });
+            const fileURL = URL.createObjectURL(file);
+            window.open(fileURL, '_blankga');
+          }
+          
+        });
+        
   });
 
   $('#myTable').DataTable({
