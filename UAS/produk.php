@@ -7,6 +7,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css" rel="stylesheet">
+  <script src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
 
 </head>
 <body>
@@ -16,7 +18,7 @@
   <button class="btn btn-primary" id="tambah" data-bs-toggle="modal" data-bs-target="#myModaltambah" >
     Tambah
   </button>
-  <table class="table table-bordered table-striped mt-3 ">
+  <table id="myTable" class="table table-bordered table-striped mt-3 display nowrap">
     <thead>
       <tr>
         <th class="text-center">Action</th>
@@ -167,6 +169,17 @@ $conn->close();
 
 
 <script>
+
+$(document).ready(function() {
+    $('#myTable').DataTable({
+      pageLength: 10,
+      lengthMenu: [10, 25, 50, 100],
+      order: [[1, 'asc']],
+      scrollX: true,
+      scrollY: 200,
+      responsive: true
+    });
+});
 
 function setModalData(kode, nama, satuan, hbeli, hjual) {
     $("#kode1").val(kode);

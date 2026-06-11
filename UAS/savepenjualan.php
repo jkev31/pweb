@@ -112,10 +112,10 @@ while ($r = $result->fetch_assoc()) {
 
   <!-- ── Tabel Penjualan ── -->
   <div class="table-responsive">
-    <table class="table table-bordered table-hover bg-white align-middle">
+    <table id="myTable" class="table table-bordered table-hover bg-white align-middle">
       <thead class="table-light">
         <tr>
-          <th class="text-center">Action</th>
+          <th class="text-center sticky-column">Action</th>
           <th class="text-center">Kode</th>
           <th class="text-center">Tanggal</th>
           <th class="text-center">Konsumen</th>
@@ -253,6 +253,15 @@ while ($r = $result->fetch_assoc()) {
 
 <script>
 $(document).ready(function () {
+
+  $('#myTable').DataTable({
+      pageLength: 10,
+      lengthMenu: [10, 25, 50, 100],
+      order: [[1, 'asc']],
+      scrollX: true,
+      scrollY: 200,
+      responsive: true
+    });
 
   /* ── Helper: muat halaman ke #isi (SPA) atau navigasi langsung ── */
   function loadPage(url) {
