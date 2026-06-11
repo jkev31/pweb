@@ -105,6 +105,7 @@ while ($r = $result->fetch_assoc()) {
       <div class="d-flex gap-2">
         <button type="submit" class="btn btn-primary">Filter</button>
         <button type="button" class="btn btn-outline-secondary" id="btn-reset-filter">Reset</button>
+        <button type="button" class="btn btn-dark" id="printpdf">Print</button>
       </div>
     </form>
 
@@ -253,6 +254,37 @@ while ($r = $result->fetch_assoc()) {
 
 <script>
 $(document).ready(function () {
+
+  $("#printpdf").click(function () {
+        const table = $("#myTable").DataTable();
+        let datatable = [];
+
+        table.rows().every(function (){
+          const sel = $(this.node()).find("td");
+          
+          datatable.push({
+            kode: sel.eq(1).text(),
+            tanggal: sel.eq(2).text(),
+            konsumen: sel.eq(3).text(),
+            grandtotal: sel.eq(4).text()
+          });
+
+        });
+        // console.log(JSON.stringify({ datatable: datatable }))
+        $.ajax({
+          url: 'print.php',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ datatable }),
+          dataType: 'json'
+        })
+        .done(function(data) {
+            console.log('Success:', data);
+        })
+        // .fail(function(xhr, status, error) {
+        //     console.error('Error:', error);
+        // });
+  });
 
   $('#myTable').DataTable({
       pageLength: 10,
