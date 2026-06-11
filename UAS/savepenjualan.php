@@ -115,10 +115,10 @@ while ($r = $result->fetch_assoc()) {
     <table class="table table-bordered table-hover bg-white align-middle">
       <thead class="table-light">
         <tr>
-          <th style="width:80px">Action</th>
-          <th>Kode</th>
-          <th>Tanggal</th>
-          <th>Konsumen</th>
+          <th class="text-center">Action</th>
+          <th class="text-center">Kode</th>
+          <th class="text-center">Tanggal</th>
+          <th class="text-center">Konsumen</th>
           <th class="text-end">Grand Total</th>
         </tr>
       </thead>
@@ -130,15 +130,15 @@ while ($r = $result->fetch_assoc()) {
         <?php else: ?>
           <?php foreach ($rows as $row): ?>
           <tr>
-            <td>
+            <td class='text-center'>
               <button class="btn btn-info btn-sm btn-view-penjualan"
                       data-kodepj="<?= htmlspecialchars($row['kodepj']) ?>">
                 View
               </button>
             </td>
-            <td><?= htmlspecialchars($row['kodepj']) ?></td>
-            <td><?= htmlspecialchars($row['tanggal']) ?></td>
-            <td><?= htmlspecialchars($row['konsumen']) ?></td>
+            <td class="text-center"><?= htmlspecialchars($row['kodepj']) ?></td>
+            <td class="text-center"><?= htmlspecialchars($row['tanggal']) ?></td>
+            <td class="text-center"><?= htmlspecialchars($row['konsumen']) ?></td>
             <td class="text-end">Rp <?= number_format($row['grandtotal'], 0, ',', '.') ?></td>
           </tr>
           <?php endforeach; ?>
@@ -209,33 +209,33 @@ while ($r = $result->fetch_assoc()) {
               <th>Kode</th>
               <th>Nama</th>
               <th>Satuan</th>
-              <th>Harga</th>
-              <th>Qty</th>
-              <th>Subtotal</th>
+              <th class="text-end">Harga</th>
+              <th class="text-center">Qty</th>
+              <th class="text-end">Subtotal</th>
             </tr>
           </thead>
           <tbody id="view-tbl-body"></tbody>
           <tfoot>
             <tr>
               <td colspan="4"></td>
-              <td>Total</td>
-              <td>Rp <span id="view-total">0</span></td>
+              <td class='text-end'>Total</td>
+              <td class='text-end'>Rp <span id="view-total">0</span></td>
             </tr>
             <tr>
               <td colspan="4"></td>
-              <td>
+              <td class='text-end'>
                 Diskon
                 <input type="number" id="view-diskon-persen"
                        class="form-control form-control-sm mt-1"
                        style="width:70px; display:inline-block;" readonly>
                 <span class="text-muted">%</span>
               </td>
-              <td>Rp <span id="view-diskon-nominal">0</span></td>
+              <td class='text-end'>Rp <span id="view-diskon-nominal">0</span></td>
             </tr>
             <tr>
               <td colspan="4"></td>
-              <td>Grandtotal</td>
-              <td>Rp <span id="view-grandtotal">0</span></td>
+              <td class='text-end'>Grandtotal</td>
+              <td class='text-end'>Rp <span id="view-grandtotal">0</span></td>
             </tr>
           </tfoot>
         </table>
@@ -327,9 +327,9 @@ $(document).ready(function () {
             + '<td>' + d.kode    + '</td>'
             + '<td>' + (d.nama   || '') + '</td>'
             + '<td>' + (d.satuan || '') + '</td>'
-            + '<td>' + parseFloat(d.hjual).toLocaleString('id-ID')    + '</td>'
-            + '<td>' + d.qty     + '</td>'
-            + '<td>Rp ' + parseFloat(d.subtotal).toLocaleString('id-ID') + '</td>'
+            + '<td class="text-end">' + parseFloat(d.hjual).toLocaleString('id-ID')    + '</td>'
+            + '<td class="text-center">' + d.qty     + '</td>'
+            + '<td class="text-end">Rp ' + parseFloat(d.subtotal).toLocaleString('id-ID') + '</td>'
             + '</tr>';
         });
         $('#view-tbl-body').html(rows);

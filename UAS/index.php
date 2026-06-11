@@ -26,6 +26,9 @@
                         <button class="nav-link" id="dashboard">dashboard</button>
                     </li>
                     <li class="nav-item">
+                        <button class="nav-link" id="produk">produk</button>
+                    </li>
+                    <li class="nav-item">
                         <button class="nav-link" id="pembelian">pembelian</button>
                     </li>
                     <li class="nav-item">
@@ -58,6 +61,9 @@
         });
         $("#penjualan").click(function(){
             $("#isi").load("savepenjualan.php");
+        });
+        $("#produk").click(function(){
+            $("#isi").load("produk.php");
         });
     });
 </script>
