@@ -12,7 +12,7 @@
 <body>
 
 <div class="container mt-3">
-  <h2>Items</h2>
+  <h2>Daftar Produk</h2>
   <button class="btn btn-primary" id="tambah" data-bs-toggle="modal" data-bs-target="#myModaltambah" >
     Tambah
   </button>
@@ -130,7 +130,7 @@ $conn->close();
      <div class="modal-body">
      <div class="mt-1">
      
-     <input type="text" class="form-control" id="kode1" placeholder="Enter Kode" name="kode">
+     <input type="text" class="form-control" id="kode1" placeholder="Enter Kode" name="kode" readonly>
      </div>
      <div class="mt-1">
      
@@ -193,7 +193,7 @@ $("#save").click(function(){
         success: function(response) {
             console.log('Sukses:', response);
             alert('Data berhasil dikirim!');
-            window.location.href = "produk.php";
+            window.location.href = "index.php";
         },
         error: function(xhr, status, error) {
             console.error('Error:', error);
@@ -205,7 +205,6 @@ $("#save").click(function(){
 
 $("#update").click(function(){
     var formdata = new FormData();
-     formdata.append('kode',$("#kode1").val());
      formdata.append('nama',$("#nama1").val());
      formdata.append('satuan',$("#satuan1").val());
      formdata.append('hbeli',$("#hbeli1").val());
@@ -220,7 +219,7 @@ $("#update").click(function(){
         success: function(response) {
             console.log('Sukses:', response);
             alert('Data berhasil diupdate!');
-            window.location.href = "produk.php";
+            window.location.href = "index.php";
         },
         error: function(xhr, status, error) {
             console.error('Error:', error);
@@ -245,7 +244,7 @@ $("#delete").click(function(){
         success: function(response) {
             console.log('Sukses:', response);
             alert('Data berhasil dihapus!');
-            window.location.href = "produk.php";
+            window.location.href = "index.php";
         },
         error: function(xhr, status, error) {
             console.error('Error:', error);
