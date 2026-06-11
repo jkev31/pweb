@@ -3,7 +3,7 @@ include 'connect.php';
 
 header('Content-Type: application/json');
 
-$kodepj = $_GET['kodepj'] ?? '';
+$kodepj = $_POST['kodepj'] ?? '';
 
 if ($kodepj === '') {
     echo json_encode(['error' => 'kodepj tidak boleh kosong']);

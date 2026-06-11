@@ -297,9 +297,12 @@ $(document).ready(function () {
     $('#view-total, #view-diskon-nominal, #view-grandtotal').text('0');
     $('#view-diskon-persen').val('');
 
+
+    // AJAX load get_detail_penjualan.php
+
     $.ajax({
       url: 'get_detail_penjualan.php',
-      method: 'GET',
+      method: 'POST',
       data: { kodepj: kodepj },
       dataType: 'json',
       success: function (data) {
