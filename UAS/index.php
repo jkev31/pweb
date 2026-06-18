@@ -31,6 +31,9 @@
                         <button class="nav-link" id="produk">produk</button>
                     </li>
                     <li class="nav-item">
+                        <button class="nav-link" id="supplier">supplier</button>
+                    </li>
+                    <li class="nav-item">
                         <button class="nav-link" id="pembelian">pembelian</button>
                     </li>
                     <li class="nav-item">
@@ -66,6 +69,9 @@
         });
         $("#produk").click(function(){
             $("#isi").load("produk.php");
+        });
+        $("#supplier").click(function(){
+            $("#isi").load("supplier.php");
         });
     });
 </script>
