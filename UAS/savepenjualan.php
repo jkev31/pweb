@@ -15,8 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save'
     $kodepj     = 'pj' . date('YmdHis') . rand(10, 99);
     $tanggal    = $_POST['tanggal']    ?? date('Y-m-d');
     $konsumen   = $_POST['konsumen']   ?? '';
-    $telp       = $_POST['telp']       ?? '';
-    $ket        = $_POST['ket']        ?? '';
+    $telp       = $_POST['telp-kn']       ?? '';
+    $ket        = $_POST['ket-kn']        ?? '';
     $total      = (float)($_POST['total']      ?? 0);
     $diskon     = (float)($_POST['diskon']     ?? 0);
     $grandtotal = (float)($_POST['grandtotal'] ?? 0);
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save'
 
     // Insert ke masterpenjualan
     $stmt = $conn->prepare(
-        "INSERT INTO masterpenjualan (kodepj, tanggal, konsumen, telp, ket, total, diskon, grandtotal)
+        "INSERT INTO masterpenjualan (kodepj, tanggal, konsumen, `telp-kn`, `ket-kn`, total, diskon, grandtotal)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?)" 
     );
     $stmt->bind_param('sssssddd', $kodepj, $tanggal, $konsumen, $telp, $ket, $total, $diskon, $grandtotal);
@@ -37,11 +37,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save'
     // Insert ke detailpenjualan
     if (!empty($items)) {
         $stmt2 = $conn->prepare(
-            "INSERT INTO detailpenjualan (kodepj, kode, hjual, qty, subtotal) VALUES (?, ?, ?, ?, ?)"
+            "INSERT INTO detailpenjualan (kodepj, kodepr, hjual, qty, subtotal) VALUES (?, ?, ?, ?, ?)"
         );
         foreach ($items as $it) {
             $kode  = $it['kode']     ?? '';
-            $hjual = (float)($it['harga']    ?? 0);
+            $hjual = (float)($it['hjual']    ?? 0);
             $qty   = (float)($it['qty']      ?? 0);
             $sub   = (float)($it['subtotal'] ?? 0);
             $stmt2->bind_param('ssddd', $kodepj, $kode, $hjual, $qty, $sub);
@@ -345,8 +345,8 @@ $(document).ready(function () {
         $('#view-kodepj').text(m.kodepj);
         $('#view-tanggal').val(m.tanggal);
         $('#view-konsumen').val(m.konsumen);
-        $('#view-telp').val(m.telp);
-        $('#view-ket').val(m.ket);
+        $('#view-telp').val(m['telp-kn']);
+        $('#view-ket').val(m['ket-kn']);
 
         // Isi baris detail tabel
         var rows = '';

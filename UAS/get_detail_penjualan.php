@@ -23,14 +23,14 @@ if (!$master) {
 
 // ── Ambil baris detail + nama/satuan dari tabel items ──────────
 $stmt2 = $conn->prepare(
-    "SELECT d.kode,
-            COALESCE(i.nama,   '') AS nama,
+    "SELECT d.kodepr AS kode,
+            COALESCE(i.namapr,   '') AS nama,
             COALESCE(i.satuan, '') AS satuan,
             d.hjual,
             d.qty,
             d.subtotal
      FROM   detailpenjualan d
-     LEFT JOIN items i ON d.kode = i.kode
+     LEFT JOIN items i ON d.kodepr = i.kodepr
      WHERE  d.kodepj = ?"
 );
 $stmt2->bind_param('s', $kodepj);

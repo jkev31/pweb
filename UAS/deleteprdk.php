@@ -1,13 +1,13 @@
 <?php
 include "connect.php";
-$kode = $_POST['kode'];
-$nama = $_POST['nama'];
+$kode = $_POST['kodepr'];
+$nama = $_POST['namapr'];
 $satuan = $_POST['satuan'];
 $hbeli = $_POST['hbeli'];
 $hjual = $_POST['hjual'];
 
 $sql = "delete from items
-where kode = '$kode'";
+where kodepr = '$kode'";
 if($conn->query($sql)===true) {
     echo "sukses delete";
 } else {

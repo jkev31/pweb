@@ -9,8 +9,8 @@
     <thead>
       <tr>
         <th class="text-center">Action</th>
-        <th class="text-center">Kode</th>
-        <th class="text-center">Nama</th>
+        <th class="text-center">Kode Produk</th>
+        <th class="text-center">Nama Produk</th>
         <th class="text-center">Satuan</th>
         <th class="text-end">Harga Beli</th>
         <th class="text-end">Harga Jual</th>
@@ -29,11 +29,11 @@ if ($result->num_rows > 0) {
   // Output data of each row
   while($row = $result->fetch_assoc()) {
     echo "<tr> <td class='text-center'>";
-    echo '<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModalubah" onclick="setModalData(\''.$row['kode'].'\', \''.$row['nama'].'\', \''.$row['satuan'].'\', \''.$row['hbeli'].'\', \''.$row['hjual'].'\')">Ubah</button>';
+    echo '<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModalubah" onclick="setModalData(\''.$row['kodepr'].'\', \''.$row['namapr'].'\', \''.$row['satuan'].'\', \''.$row['hbeli'].'\', \''.$row['hjual'].'\')">Ubah</button>';
     echo "</td> <td class='text-center'>";
-    echo $row["kode"];
+    echo $row["kodepr"];
     echo "</td> <td class='text-center'>";
-    echo $row["nama"];
+    echo $row["namapr"];
     echo "</td> <td class='text-center'>";
     echo $row["satuan"];
     echo "</td> <td class='text-end'>";
@@ -178,8 +178,8 @@ function setModalData(kode, nama, satuan, hbeli, hjual) {
 
 $("#save").click(function(){
      var formdata = new FormData();
-     formdata.append('kode',$("#kode").val());
-     formdata.append('nama',$("#nama").val());
+     formdata.append('kodepr',$("#kode").val());
+     formdata.append('namapr',$("#nama").val());
      formdata.append('satuan',$("#satuan").val());
      formdata.append('hbeli',$("#hbeli").val());
      formdata.append('hjual',$("#hjual").val());
@@ -205,10 +205,11 @@ $("#save").click(function(){
 
 $("#update").click(function(){
     var formdata = new FormData();
-     formdata.append('nama',$("#nama1").val());
-     formdata.append('satuan',$("#satuan1").val());
-     formdata.append('hbeli',$("#hbeli1").val());
-     formdata.append('hjual',$("#hjual1").val());
+    formdata.append('kodepr',$("#kode1").val());
+    formdata.append('namapr',$("#nama1").val());
+    formdata.append('satuan',$("#satuan1").val());
+    formdata.append('hbeli',$("#hbeli1").val());
+    formdata.append('hjual',$("#hjual1").val());
 
      $.ajax({
         type: 'POST',
@@ -229,11 +230,11 @@ $("#update").click(function(){
 
 $("#delete").click(function(){
     var formdata = new FormData();
-     formdata.append('kode',$("#kode1").val());
-     formdata.append('nama',$("#nama1").val());
-     formdata.append('satuan',$("#satuan1").val());
-     formdata.append('hbeli',$("#hbeli1").val());
-     formdata.append('hjual',$("#hjual1").val());
+    formdata.append('kodepr',$("#kode1").val());
+    formdata.append('namapr',$("#nama1").val());
+    formdata.append('satuan',$("#satuan1").val());
+    formdata.append('hbeli',$("#hbeli1").val());
+    formdata.append('hjual',$("#hjual1").val());
 
      $.ajax({
         type: 'POST',

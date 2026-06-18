@@ -2,7 +2,7 @@
 include 'connect.php';
  
 // Ambil daftar item dari tabel items untuk master item modal
-$items_result = $conn->query("SELECT kode, nama, satuan, hjual FROM items ORDER BY kode");
+$items_result = $conn->query("SELECT kodepr AS kode, namapr AS nama, satuan, hjual FROM items ORDER BY kodepr");
 $db_items = [];
 while ($row = $items_result->fetch_assoc()) { // fetch_assoc() = mengambil data dari database dalam bentuk array asosiatif
     $db_items[] = $row;
@@ -366,8 +366,8 @@ while ($row = $items_result->fetch_assoc()) { // fetch_assoc() = mengambil data 
             action    : 'save',
             tanggal   : tanggal,
             konsumen  : konsumen,
-            telp      : telp,
-            ket       : ket,
+            'telp-kn' : telp,
+            'ket-kn'  : ket,
             total     : total,
             diskon    : diskon,
             grandtotal: grandtotal,

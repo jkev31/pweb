@@ -30,19 +30,19 @@ if ($result->num_rows > 0) {
   // Output data of each row
   while($row = $result->fetch_assoc()) {
     echo "<tr> <td class='text-center'>";
-    echo '<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModalubah" onclick="setModalData(\''.$row['kode'].'\', \''.$row['nama-sup'].'\', \''.$row['alamat'].'\', \''.$row['kota'].'\', \''.$row['ket'].'\', \''.$row['telp'].'\')">Ubah</button>';
+    echo '<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModalubah" onclick="setModalData(\''.$row['kode-sup'].'\', \''.$row['nama-sup'].'\', \''.$row['alamat-sup'].'\', \''.$row['kota-sup'].'\', \''.$row['ket-sup'].'\', \''.$row['telp-sup'].'\')">Ubah</button>';
     echo "</td> <td class='text-center'>";
-    echo $row["kode"];
+    echo $row["kode-sup"];
     echo "</td> <td class='text-center'>";
     echo $row["nama-sup"];
     echo "</td> <td class='text-center'>";
-    echo $row["alamat"];
+    echo $row["alamat-sup"];
     echo "</td> <td class='text-center'>";
-    echo $row["kota"];
+    echo $row["kota-sup"];
     echo "</td><td class='text-center'>";
-    echo $row["ket"];
+    echo $row["ket-sup"];
     echo "</td><td class='text-center'>";
-    echo $row["telp"];
+    echo $row["telp-sup"];
     echo "</td></tr>";
     
   }
@@ -188,12 +188,12 @@ function setModalData(kode, nama, alamat, kota, ket, telp) {
 
 $("#save").click(function(){
      var formdata = new FormData();
-     formdata.append('kode',$("#kode").val());
-     formdata.append('nama',$("#nama").val());
-     formdata.append('alamat',$("#alamat").val());
-     formdata.append('kota',$("#kota").val());
-     formdata.append('ket',$("#ket").val());
-     formdata.append('telp',$("#telp").val());
+     formdata.append('kode-sup',$("#kode").val());
+     formdata.append('nama-sup',$("#nama").val());
+     formdata.append('alamat-sup',$("#alamat").val());
+     formdata.append('kota-sup',$("#kota").val());
+     formdata.append('ket-sup',$("#ket").val());
+     formdata.append('telp-sup',$("#telp").val());
 
      $.ajax({
         type: 'POST',
@@ -216,11 +216,12 @@ $("#save").click(function(){
 
 $("#update").click(function(){
     var formdata = new FormData();
-     formdata.append('nama',$("#nama1").val());
-     formdata.append('alamat',$("#alamat1").val());
-     formdata.append('kota',$("#kota1").val());
-     formdata.append('ket',$("#ket1").val());
-     formdata.append('telp',$("#telp1").val());
+    formdata.append('kode-sup',$("#kode1").val());
+    formdata.append('nama-sup',$("#nama1").val());
+    formdata.append('alamat-sup',$("#alamat1").val());
+    formdata.append('kota-sup',$("#kota1").val());
+    formdata.append('ket-sup',$("#ket1").val());
+    formdata.append('telp-sup',$("#telp1").val());
 
      $.ajax({
         type: 'POST',
@@ -241,12 +242,12 @@ $("#update").click(function(){
 
 $("#delete").click(function(){
     var formdata = new FormData();
-     formdata.append('kode',$("#kode1").val());
-     formdata.append('nama',$("#nama1").val());
-     formdata.append('alamat',$("#alamat1").val());
-     formdata.append('kota',$("#kota1").val());
-     formdata.append('ket',$("#ket1").val());
-     formdata.append('telp',$("#telp1").val());
+     formdata.append('kode-sup',$("#kode1").val());
+     formdata.append('nama-sup',$("#nama1").val());
+     formdata.append('alamat-sup',$("#alamat1").val());
+     formdata.append('kota-sup',$("#kota1").val());
+     formdata.append('ket-sup',$("#ket1").val());
+     formdata.append('telp-sup',$("#telp1").val());
 
      $.ajax({
         type: 'POST',

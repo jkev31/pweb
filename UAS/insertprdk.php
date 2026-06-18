@@ -1,7 +1,7 @@
 <?php
 include "connect.php";
-$kode = $_POST['kode'];
-$nama = $_POST['nama'];
+$kode = $_POST['kodepr'];
+$nama = $_POST['namapr'];
 $satuan = $_POST['satuan'];
 $hbeli = $_POST['hbeli'];
 $hjual = $_POST['hjual'];
