@@ -12,9 +12,9 @@
         <th class="text-center">Kode</th>
         <th class="text-center">Nama</th>
         <th class="text-center">Alamat</th>
-        <th class="text-end">Kota</th>
-        <th class="text-end">Ket</th>
-        <th class="text-end">Telp</th>
+        <th class="text-center">Kota</th>
+        <th class="text-center">Ket</th>
+        <th class="text-center">Telp</th>
       </tr>
     </thead>
     <tbody>
@@ -30,18 +30,18 @@ if ($result->num_rows > 0) {
   // Output data of each row
   while($row = $result->fetch_assoc()) {
     echo "<tr> <td class='text-center'>";
-    echo '<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModalubah" onclick="setModalData(\''.$row['kode'].'\', \''.$row['nama'].'\', \''.$row['alamat'].'\', \''.$row['kota'].'\', \''.$row['ket'].'\', \''.$row['telp'].'\')">Ubah</button>';
+    echo '<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModalubah" onclick="setModalData(\''.$row['kode'].'\', \''.$row['nama-sup'].'\', \''.$row['alamat'].'\', \''.$row['kota'].'\', \''.$row['ket'].'\', \''.$row['telp'].'\')">Ubah</button>';
     echo "</td> <td class='text-center'>";
     echo $row["kode"];
     echo "</td> <td class='text-center'>";
-    echo $row["nama"];
+    echo $row["nama-sup"];
     echo "</td> <td class='text-center'>";
     echo $row["alamat"];
-    echo "</td> <td class='text-end'>";
+    echo "</td> <td class='text-center'>";
     echo $row["kota"];
-    echo "</td><td class='text-end'>";
+    echo "</td><td class='text-center'>";
     echo $row["ket"];
-    echo "</td><td class='text-end'>";
+    echo "</td><td class='text-center'>";
     echo $row["telp"];
     echo "</td></tr>";
     
