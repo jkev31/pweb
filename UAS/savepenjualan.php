@@ -56,8 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save'
 /* 
    Query data penjualan (dengan filter tanggal opsional)
 */
-$tgl_awal  = $_GET['tgl_awal']  ?? '';
-$tgl_akhir = $_GET['tgl_akhir'] ?? '';
+$tgl_awal  = $_GET['tgl_awal']  ?? date('Y-m-d');
+$tgl_akhir = $_GET['tgl_akhir'] ?? date('Y-m-d');
 
 $sql    = "SELECT * FROM masterpenjualan WHERE 1=1";
 $params = [];
@@ -105,7 +105,7 @@ while ($r = $result->fetch_assoc()) {
       <div class="d-flex gap-2">
         <button type="submit" class="btn btn-primary">Filter</button>
         <button type="button" class="btn btn-outline-secondary" id="btn-reset-filter">Reset</button>
-        <button type="button" class="btn btn-dark" id="printpdf">Print</button>
+        <button type="button" class="btn btn-dark" id="printpenjualan">Print</button>
       </div>
     </form>
 
@@ -245,6 +245,7 @@ while ($r = $result->fetch_assoc()) {
 
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-dark" id="printdetail">Print</button>
       </div>
 
     </div>
@@ -255,7 +256,7 @@ while ($r = $result->fetch_assoc()) {
 <script>
 $(document).ready(function () {
 
-  $("#printpdf").click(function () {
+  $("#printpenjualan").click(function () {
     const table = $("#myTable").DataTable();
     let datatable = [];
 
@@ -269,7 +270,7 @@ $(document).ready(function () {
         });
     });
 
-    const url = 'print.php?data=' + encodeURIComponent(JSON.stringify(datatable));
+    const url = 'printpenjualan.php?data=' + encodeURIComponent(JSON.stringify(datatable));
     window.open(url, '_blank');
 });
 

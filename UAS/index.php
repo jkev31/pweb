@@ -28,10 +28,10 @@
                         <button class="nav-link" id="dashboard">dashboard</button>
                     </li>
                     <li class="nav-item">
-                        <button class="nav-link" id="produk">produk</button>
+                        <button class="nav-link" id="nav-produk">produk</button>
                     </li>
                     <li class="nav-item">
-                        <button class="nav-link" id="supplier">supplier</button>
+                        <button class="nav-link" id="nav-supplier">supplier</button>
                     </li>
                     <li class="nav-item">
                         <button class="nav-link" id="pembelian">pembelian</button>
@@ -62,15 +62,15 @@
             $("#isi").load("dashboard.php");
         });
         $("#pembelian").click(function(){
-            $("#isi").load("pembelian.php");
+            $("#isi").load("savepembelian.php");
         });
         $("#penjualan").click(function(){
             $("#isi").load("savepenjualan.php");
         });
-        $("#produk").click(function(){
+        $("#nav-produk").click(function(){
             $("#isi").load("produk.php");
         });
-        $("#supplier").click(function(){
+        $("#nav-supplier").click(function(){
             $("#isi").load("supplier.php");
         });
     });
