@@ -66,8 +66,9 @@ while ($row = $items_result->fetch_assoc()) { // fetch_assoc() = mengambil data 
       </div>
       <div class="col-sm-2">
         <label class="mb-1">harga</label>
-        <!-- Input number untuk harga dasar item (otomatis terisi) -->
-        <input type="number" class="form-control" id="harga" readonly>
+        <!-- Input untuk harga dasar item (otomatis terisi, format Rupiah) -->
+        <input type="text" class="form-control" id="harga" readonly>
+        <input type="hidden" id="harga_val">
       </div>
       <div class="col-sm-2">
         <label class="mb-1">qty</label>
@@ -77,7 +78,7 @@ while ($row = $items_result->fetch_assoc()) { // fetch_assoc() = mengambil data 
       <div class="col-sm-2">
         <label class="mb-1">subtotal</label>
         <!-- Field readonly untuk menampilkan estimasi subtotal dari item yang sedang diinput sebelum ditambahkan -->
-        <input type="number" class="form-control bg-body-secondary" id="subtotal_preview" placeholder="Subtotal"
+        <input type="text" class="form-control bg-body-secondary" id="subtotal_preview" placeholder="Subtotal"
           readonly>
       </div>
       <div class="col-sm-1 d-flex align-items-end">
@@ -192,7 +193,7 @@ while ($row = $items_result->fetch_assoc()) { // fetch_assoc() = mengambil data 
                   <td><?= htmlspecialchars($item['kode'])   ?></td>
                   <td><?= htmlspecialchars($item['nama'])   ?></td>
                   <td><?= htmlspecialchars($item['satuan']) ?></td>
-                  <td><?= number_format((float)$item['hjual'], 0, ',', '.') ?></td>
+                  <td>Rp <?= number_format((float)$item['hjual'], 0, ',', '.') ?></td>
                 </tr>
                 <?php endforeach; ?>
               <?php endif; ?>
@@ -209,6 +210,11 @@ while ($row = $items_result->fetch_assoc()) { // fetch_assoc() = mengambil data 
 
 
   <script>
+    /* Helper: format angka ke format Rupiah Indonesia */
+    function formatRupiah(angka) {
+      return 'Rp ' + angka.toLocaleString('id-ID');
+    }
+
     /* 
     Helper: muat halaman ke #isi (SPA) atau navigasi langsung
     SPA (Single Page Application) = halaman yang memuat konten tanpa me-refresh seluruh halaman
@@ -226,7 +232,8 @@ while ($row = $items_result->fetch_assoc()) { // fetch_assoc() = mengambil data 
       $("#kode").val(kode);
       $("#nama").val(nama);
       $("#satuan").val(satuan);
-      $("#harga").val(harga);
+      $("#harga_val").val(harga);
+      $("#harga").val(formatRupiah(parseFloat(harga)));
       $("#qty").val(1).focus();
       updateSubtotalPreview();
     }
@@ -236,22 +243,22 @@ while ($row = $items_result->fetch_assoc()) { // fetch_assoc() = mengambil data 
       var total = 0;
  
       $("#tbldata tbody tr").each(function () {
-        var harga    = parseFloat($(this).find(".harga").text())    || 0;
+        var harga    = parseFloat($(this).find(".harga").data('value'))    || 0;
         var qty      = parseInt($(this).find(".qty").text())         || 1;
         var subtotal = harga * qty;
-        $(this).find(".subtotal").text("Rp " + subtotal.toLocaleString('id-ID'));
+        $(this).find(".subtotal").data('value', subtotal).text(formatRupiah(subtotal));
         total += subtotal;
       });
  
-      $("#tot").html("<b>" + total.toLocaleString('id-ID') + "</b>");
+      $("#tot").data('value', total).html("<b>" + total.toLocaleString('id-ID') + "</b>");
  
       var persen  = parseFloat($("#diskon_persen").val()) || 0;
       var nominal = Math.round(total * persen / 100);
-      $("#diskon_nominal").text(nominal.toLocaleString('id-ID'));
+      $("#diskon_nominal").data('value', nominal).text(nominal.toLocaleString('id-ID'));
  
       var grandtotal = total - nominal;
       if (grandtotal < 0) grandtotal = 0;
-      $("#grandtotal").text(grandtotal.toLocaleString('id-ID'));
+      $("#grandtotal").data('value', grandtotal).text(grandtotal.toLocaleString('id-ID'));
  
       var bayar   = parseFloat($("#bayar").val()) || 0;
       var kembali = bayar >= grandtotal ? bayar - grandtotal : 0;
@@ -260,9 +267,9 @@ while ($row = $items_result->fetch_assoc()) { // fetch_assoc() = mengambil data 
  
     /* Preview subtotal sebelum item ditambahkan ke tabel */
     function updateSubtotalPreview() {
-      var harga = parseFloat($("#harga").val()) || 0;
+      var harga = parseFloat($("#harga_val").val()) || 0;
       var qty   = parseInt($("#qty").val())     || 0;
-      $("#subtotal_preview").val(qty > 0 ? harga * qty : "");
+      $("#subtotal_preview").val(qty > 0 ? formatRupiah(harga * qty) : "");
     }
  
     $(document).ready(function () {
@@ -277,7 +284,7 @@ while ($row = $items_result->fetch_assoc()) { // fetch_assoc() = mengambil data 
         var x = $("#kode").val().trim();
         var y = $("#nama").val().trim();
         var s = $("#satuan").val().trim();
-        var z = parseFloat($("#harga").val()) || 0;
+        var z = parseFloat($("#harga_val").val()) || 0;
         var q = parseInt($("#qty").val())     || 0;
  
         if (x === "") { alert("Pilih item dulu!"); return; }
@@ -290,14 +297,14 @@ while ($row = $items_result->fetch_assoc()) { // fetch_assoc() = mengambil data 
           + '<td>'  + x + '</td>'
           + '<td>'  + y + '</td>'
           + '<td>'  + s + '</td>'
-          + '<td class="harga">' + z + '</td>'
+          + '<td class="harga" data-value="' + z + '">' + formatRupiah(z) + '</td>'
           + '<td class="qty">'   + q + '</td>'
-          + '<td class="subtotal">Rp ' + subtotal.toLocaleString('id-ID') + '</td>'
+          + '<td class="subtotal" data-value="' + subtotal + '">' + formatRupiah(subtotal) + '</td>'
           + '</tr>';
  
         $("#tbldata tbody").append(tbltr);
         hitungtotal();
-        $("#kode, #nama, #satuan, #harga, #qty, #subtotal_preview").val("");
+        $("#kode, #nama, #satuan, #harga, #harga_val, #qty, #subtotal_preview").val("");
       });
  
       /* Hapus baris dari keranjang */
@@ -331,15 +338,13 @@ while ($row = $items_result->fetch_assoc()) { // fetch_assoc() = mengambil data 
         let items = [];
         $("#tbldata tbody tr").each(function () {
           let row          = $(this);
-          let subtotalText = row.find(".subtotal").text().replace("Rp ", "").replace(/\./g, ""); 
-          // replace(/\./g = mengganti karakter titik (.) secara global (g))
           items.push({
             kode    : row.find("td:eq(1)").text().trim(),
             nama    : row.find("td:eq(2)").text().trim(),
             satuan  : row.find("td:eq(3)").text().trim(),
-            harga   : parseFloat(row.find(".harga").text())   || 0,
+            harga   : parseFloat(row.find(".harga").data('value'))   || 0,
             qty     : parseInt(row.find(".qty").text())        || 0,
-            subtotal: parseFloat(subtotalText)                 || 0
+            subtotal: parseFloat(row.find(".subtotal").data('value')) || 0
           });
         });
  
@@ -349,13 +354,9 @@ while ($row = $items_result->fetch_assoc()) { // fetch_assoc() = mengambil data 
         }
  
         // Ambil nilai total, diskon, grandtotal dari footer tabel
-        let totalText      = $("#tot").text().replace(/\./g, "");
-        let diskonText     = $("#diskon_nominal").text().replace(/\./g, "");
-        let grandtotalText = $("#grandtotal").text().replace(/\./g, "");
- 
-        let total      = parseFloat(totalText)      || 0;
-        let diskon     = parseFloat(diskonText)     || 0;
-        let grandtotal = parseFloat(grandtotalText) || 0;
+        let total      = parseFloat($("#tot").data('value'))          || 0;
+        let diskon     = parseFloat($("#diskon_nominal").data('value')) || 0;
+        let grandtotal = parseFloat($("#grandtotal").data('value'))   || 0;
  
         // Kirim ke savepenjualan.php via AJAX POST
         $.ajax({

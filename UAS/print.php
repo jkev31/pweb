@@ -1,32 +1,28 @@
 <?php
 require_once __DIR__ . '/fpdf19/fpdf.php';
 
-$jsonPayload = file_get_contents('php://input');
-
-$data = is_string($jsonPayload) ? json_decode($jsonPayload, true) : $jsonPayload;
-
-// print_r($data['datatable']);
-// $data = json_decode($datajson, true);
-
+$data = json_decode($_GET['data'] ?? '[]', true) ?: [];
+$rows = is_array($data) ? $data : [];
 
 
 $pdf = new FPDF();
 $pdf->AddPage();
-$pdf->SetFont('Arial', 'B', 16);
-$pdf->Cell(100, 10, 'Kode', 1);
-$pdf->Cell(40, 10, 'Tanggal', 1);
-$pdf->Cell(20, 10, 'Konsumen', 1);
-$pdf->Cell(40, 10, 'Grandtotal', 1);
+$pdf->SetFont('Arial', 'B', 12);
+$pdf->Cell(55, 10, 'Kode', 1, 0, 'C');
+$pdf->Cell(40, 10, 'Tanggal', 1, 0, 'C');
+$pdf->Cell(60, 10, 'Konsumen', 1, 0, 'C');
+$pdf->Cell(40, 10, 'Grandtotal', 1, 0, 'C');
 $pdf->Ln();
-foreach ($data['datatable'] as $sdata) {
-    $pdf->Cell(100, 10, $sdata['kode'], 1);
-    $pdf->Cell(40, 10, $sdata['tanggal'], 1);
-    $pdf->Cell(20, 10, $sdata['konsumen'], 1);
-    $pdf->Cell(40, 10, $sdata['grandtotal'], 1);
+foreach ($rows as $sdata) {
+    $pdf->Cell(55, 10, $sdata['kode'], 1, 0, 'C');
+    $tgl = date('d-m-Y', strtotime($sdata['tanggal']));
+    $pdf->Cell(40, 10, $tgl, 1, 0, 'C');
+    $pdf->Cell(60, 10, $sdata['konsumen'], 1, 0, 'C');
+    $pdf->Cell(40, 10, $sdata['grandtotal'], 1, 0, 'R');
     $pdf->Ln();
 
 }
 
 
-$pdf->Output();
+$pdf->Output('penjualan.pdf', 'I');
 ?>

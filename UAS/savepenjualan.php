@@ -138,7 +138,7 @@ while ($r = $result->fetch_assoc()) {
               </button>
             </td>
             <td class="text-center"><?= htmlspecialchars($row['kodepj']) ?></td>
-            <td class="text-center"><?= htmlspecialchars($row['tanggal']) ?></td>
+            <td class="text-center"><?= date('d-m-Y', strtotime($row['tanggal'])) ?></td>
             <td class="text-center"><?= htmlspecialchars($row['konsumen']) ?></td>
             <td class="text-end">Rp <?= number_format($row['grandtotal'], 0, ',', '.') ?></td>
           </tr>
@@ -256,35 +256,22 @@ while ($r = $result->fetch_assoc()) {
 $(document).ready(function () {
 
   $("#printpdf").click(function () {
-        const table = $("#myTable").DataTable();
-        let datatable = [];
+    const table = $("#myTable").DataTable();
+    let datatable = [];
 
-        table.rows().every(function (){
-          const sel = $(this.node()).find("td");
-          
-          datatable.push({
+    table.rows().every(function () {
+        const sel = $(this.node()).find("td");
+        datatable.push({
             kode: sel.eq(1).text(),
             tanggal: sel.eq(2).text(),
             konsumen: sel.eq(3).text(),
             grandtotal: sel.eq(4).text()
-          });
-
         });
-        // console.log(JSON.stringify({ datatable: datatable }))
-        $.ajax({
-          url: 'print.php',
-          type: 'POST',
-          contentType: 'application/json',
-          data: JSON.stringify({ datatable }),
-          dataType: 'json'
-        })
-        .done(function(data) {
-            console.log('Success:', data);
-        })
-        // .fail(function(xhr, status, error) {
-        //     console.error('Error:', error);
-        // });
-  });
+    });
+
+    const url = 'print.php?data=' + encodeURIComponent(JSON.stringify(datatable));
+    window.open(url, '_blank');
+});
 
   $('#myTable').DataTable({
       pageLength: 10,
@@ -368,7 +355,7 @@ $(document).ready(function () {
             + '<td>' + d.kode    + '</td>'
             + '<td>' + (d.nama   || '') + '</td>'
             + '<td>' + (d.satuan || '') + '</td>'
-            + '<td class="text-end">' + parseFloat(d.hjual).toLocaleString('id-ID')    + '</td>'
+            + '<td class="text-end">Rp ' + parseFloat(d.hjual).toLocaleString('id-ID')    + '</td>'
             + '<td class="text-center">' + d.qty     + '</td>'
             + '<td class="text-end">Rp ' + parseFloat(d.subtotal).toLocaleString('id-ID') + '</td>'
             + '</tr>';
