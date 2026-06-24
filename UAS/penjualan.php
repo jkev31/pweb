@@ -342,7 +342,7 @@ while ($row = $items_result->fetch_assoc()) { // fetch_assoc() = mengambil data 
             kode    : row.find("td:eq(1)").text().trim(),
             nama    : row.find("td:eq(2)").text().trim(),
             satuan  : row.find("td:eq(3)").text().trim(),
-            harga   : parseFloat(row.find(".harga").data('value'))   || 0,
+            hjual   : parseFloat(row.find(".harga").data('value'))   || 0,
             qty     : parseInt(row.find(".qty").text())        || 0,
             subtotal: parseFloat(row.find(".subtotal").data('value')) || 0
           });
