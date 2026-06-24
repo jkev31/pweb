@@ -107,6 +107,7 @@ while ($r = $result->fetch_assoc()) {
         <button type="submit" class="btn btn-primary">Filter</button>
         <button type="button" class="btn btn-outline-secondary" id="btn-reset-filter">Reset</button>
         <button type="button" class="btn btn-dark" id="printpembelian">Print</button>
+        <button type="button" class="btn btn-success" id="excelpembelian">Excel</button>
       </div>
     </form>
 
@@ -269,6 +270,26 @@ $(document).ready(function () {
     const url = 'printpembelian.php?data=' + encodeURIComponent(JSON.stringify(datatable));
     window.open(url, '_blank');
   });
+
+  $("#excelpembelian").click(function () {
+    const table = $("#myTable").DataTable();
+    let datatable = [];
+
+    table.rows().every(function () {
+        const sel = $(this.node()).find("td");
+        datatable.push({
+            kode: sel.eq(1).text(),
+            tanggal: sel.eq(2).text(),
+            supplier: sel.eq(3).text(),
+            grandtotal: sel.eq(4).text()
+        });
+    });
+
+    const url = 'excelpembelian.php?data=' + encodeURIComponent(JSON.stringify(datatable));
+    window.open(url, '_blank');
+  });
+
+  
 
   $("#printdetail").click(function () {
     var header = {
