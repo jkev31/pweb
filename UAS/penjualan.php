@@ -17,7 +17,7 @@ while ($row = $items_result->fetch_assoc()) { // fetch_assoc() = mengambil data 
         <!-- div untuk header elements, d-flex = display flex, mb-2 = margin bottom 2 -->
         <label class="col-sm-1 col-form-label">Tanggal:</label> <!-- label untuk tanggal -->
         <div class="col-sm-2">
-          <input type="date" class="form-control" id="tanggal"> <!-- input tanggal -->
+          <input type="date" class="form-control" id="tanggal" value="<?= date('Y-m-d') ?>"> <!-- input tanggal -->
         </div>
       </div>
 
