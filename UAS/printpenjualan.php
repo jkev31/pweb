@@ -7,6 +7,9 @@ $rows = is_array($data) ? $data : [];
 
 $pdf = new FPDF();
 $pdf->AddPage();
+$pdf->SetFont('Arial', 'B', 14);
+$pdf->Cell(0, 10, 'Rekap Penjualan', 0, 1, 'C');
+$pdf->Ln(2);
 $pdf->SetFont('Arial', 'B', 12);
 $pdf->Cell(55, 10, 'Kode', 1, 0, 'C');
 $pdf->Cell(40, 10, 'Tanggal', 1, 0, 'C');

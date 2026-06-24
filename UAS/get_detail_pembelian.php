@@ -10,8 +10,16 @@ if ($kodepb === '') {
     exit;
 }
 
-// ── Ambil header dari masterpembelian ──────────────────────────
-$stmt = $conn->prepare("SELECT * FROM masterpembelian WHERE kodepb = ?");
+// ── Ambil header dari masterpembelian + kota dari suppliers ───
+$stmt = $conn->prepare(
+    "SELECT mp.*,
+            COALESCE(s.`nama-sup`, '') AS `nama-sup`,
+            COALESCE(s.`telp-sup`, '') AS telp,
+            COALESCE(s.`ket-sup`, '') AS ket
+     FROM masterpembelian mp
+     LEFT JOIN suppliers s ON mp.`kode-sup` = s.`kode-sup`
+     WHERE mp.kodepb = ?"
+);
 $stmt->bind_param('s', $kodepb);
 $stmt->execute();
 $master = $stmt->get_result()->fetch_assoc();

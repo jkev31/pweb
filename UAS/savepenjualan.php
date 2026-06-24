@@ -124,12 +124,7 @@ while ($r = $result->fetch_assoc()) {
         </tr>
       </thead>
       <tbody>
-        <?php if (empty($rows)): ?>
-        <tr>
-          <td colspan="5" class="text-center text-muted py-3">Tidak ada data penjualan.</td>
-        </tr>
-        <?php else: ?>
-          <?php foreach ($rows as $row): ?>
+        <?php foreach ($rows as $row): ?>
           <tr>
             <td class='text-center'>
               <button class="btn btn-info btn-sm btn-view-penjualan"
@@ -142,8 +137,7 @@ while ($r = $result->fetch_assoc()) {
             <td class="text-center"><?= htmlspecialchars($row['konsumen']) ?></td>
             <td class="text-end">Rp <?= number_format($row['grandtotal'], 0, ',', '.') ?></td>
           </tr>
-          <?php endforeach; ?>
-        <?php endif; ?>
+        <?php endforeach; ?>
       </tbody>
       <tfoot>
         <tr class="table-light fw-bold">
@@ -274,13 +268,51 @@ $(document).ready(function () {
     window.open(url, '_blank');
 });
 
+$("#printdetail").click(function () {
+    var header = {
+      kodepj:      $('#view-kodepj').text(),
+      tanggal:     $('#view-tanggal').val(),
+      konsumen:    $('#view-konsumen').val(),
+      telp:        $('#view-telp').val(),
+      keterangan:  $('#view-ket').val()
+    };
+
+    var items = [];
+    $('#view-tbl-body tr').each(function () {
+      var td = $(this).find('td');
+      items.push({
+        kode:     td.eq(0).text(),
+        nama:     td.eq(1).text(),
+        satuan:   td.eq(2).text(),
+        hjual:    td.eq(3).text().replace('Rp ', ''),
+        qty:      td.eq(4).text(),
+        subtotal: td.eq(5).text().replace('Rp ', '')
+      });
+    });
+
+    var footer = {
+      total:         $('#view-total').text(),
+      diskon_persen:  $('#view-diskon-persen').val(),
+      diskon_nominal: $('#view-diskon-nominal').text(),
+      grandtotal:     $('#view-grandtotal').text()
+    };
+
+    var payload = { header: header, items: items, footer: footer };
+
+    const url = 'printdetailjual.php?data=' + encodeURIComponent(JSON.stringify(payload));
+    window.open(url, '_blank');
+});
+
   $('#myTable').DataTable({
       pageLength: 10,
       lengthMenu: [10, 25, 50, 100],
       order: [[1, 'asc']],
       scrollX: true,
       scrollY: 200,
-      responsive: true
+      responsive: true,
+      language: {
+        emptyTable: 'Tidak ada data penjualan.'
+      }
     });
 
   /* ── Helper: muat halaman ke #isi (SPA) atau navigasi langsung ── */

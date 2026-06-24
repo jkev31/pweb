@@ -9,7 +9,7 @@ while ($row = $items_result->fetch_assoc()) {
 }
 
 // Ambil daftar supplier dari tabel suppliers untuk master supplier modal
-$sup_result = $conn->query("SELECT `kode-sup`, `nama-sup`, `kota-sup`, `telp-sup` FROM suppliers ORDER BY `kode-sup`");
+$sup_result = $conn->query("SELECT `kode-sup`, `nama-sup`, `telp-sup` FROM suppliers ORDER BY `kode-sup`");
 $db_suppliers = [];
 while ($row = $sup_result->fetch_assoc()) {
     $db_suppliers[] = $row;
@@ -45,12 +45,6 @@ while ($row = $sup_result->fetch_assoc()) {
         </div>
       </div>
 
-      <div class="d-flex align-items-center mb-2">
-        <label class="col-sm-1 col-form-label">Kota Supplier:</label>
-        <div class="col-sm-2">
-          <input type="text" class="form-control" id="kota" placeholder="Kota Supplier..." readonly>
-        </div>
-      </div>
 
       <div class="d-flex align-items-center mb-2">
         <label class="col-sm-1 col-form-label">No. Telp:</label>
@@ -214,7 +208,6 @@ while ($row = $sup_result->fetch_assoc()) {
               <th>Pilih</th>
               <th>Kode</th>
               <th>Nama</th>
-              <th>Kota</th>
               <th>No. Telp</th>
             </thead>
             <tbody>
@@ -232,13 +225,11 @@ while ($row = $sup_result->fetch_assoc()) {
                       onclick="pilihsupplier(
                         '<?= htmlspecialchars($sup['kode-sup'],  ENT_QUOTES) ?>',
                         '<?= htmlspecialchars($sup['nama-sup'],  ENT_QUOTES) ?>',
-                        '<?= htmlspecialchars($sup['kota-sup'],  ENT_QUOTES) ?>',
                         '<?= htmlspecialchars($sup['telp-sup'],  ENT_QUOTES) ?>'
                       )">Pilih</button>
                   </td>
                   <td><?= htmlspecialchars($sup['kode-sup']) ?></td>
                   <td><?= htmlspecialchars($sup['nama-sup']) ?></td>
-                  <td><?= htmlspecialchars($sup['kota-sup']) ?></td>
                   <td><?= htmlspecialchars($sup['telp-sup']) ?></td>
                 </tr>
                 <?php endforeach; ?>
@@ -281,10 +272,9 @@ while ($row = $sup_result->fetch_assoc()) {
     }
 
     /* Dipanggil saat pengguna klik Pilih di modal Master Supplier */
-    function pilihsupplier(kode, nama, kota, telp) {
+    function pilihsupplier(kode, nama, telp) {
       $("#supplier").val(kode);
       $("#namasup").val(nama);
-      $("#kota").val(kota);
       $("#notelp").val(telp);
     }
  
@@ -372,13 +362,14 @@ while ($row = $sup_result->fetch_assoc()) {
       /* Tombol Save: validasi → kumpulkan data → AJAX POST → kembali */
       $("#save").click(function () {
         let tanggal  = $("#tanggal").val();
-        let supplier = $("#supplier").val().trim();
+        let kodesup  = $("#supplier").val().trim();
+        let namasup  = $("#namasup").val().trim();
         let telp     = $("#notelp").val().trim();
         let ket      = $("#keterangan").val().trim();
  
         // Validasi field wajib
         if (!tanggal)  { alert("Isi tanggal terlebih dahulu!");          return; }
-        if (!supplier) { alert("Pilih supplier terlebih dahulu!");        return; }
+        if (!kodesup)  { alert("Pilih supplier terlebih dahulu!");        return; }
  
         // Kumpulkan item dari keranjang
         let items = [];
@@ -411,7 +402,8 @@ while ($row = $sup_result->fetch_assoc()) {
           data   : {
             action     : 'save',
             tanggal    : tanggal,
-            'nama-sup' : supplier,
+            'kode-sup' : kodesup,
+            'nama-sup' : namasup,
             'telp-sup' : telp,
             'ket-sup'  : ket,
             total      : total,

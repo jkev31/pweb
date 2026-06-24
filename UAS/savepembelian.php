@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save'
     // Generate kode pembelian unik
     $kodepb     = 'pb' . date('YmdHis') . rand(10, 99);
     $tanggal    = $_POST['tanggal']    ?? date('Y-m-d');
+    $kodesup    = $_POST['kode-sup']   ?? '';
     $supplier   = $_POST['nama-sup']   ?? '';
     $telp       = $_POST['telp-sup']   ?? '';
     $ket        = $_POST['ket-sup']    ?? '';
@@ -21,10 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save'
 
     // Insert ke masterpembelian
     $stmt = $conn->prepare(
-        "INSERT INTO masterpembelian (kodepb, tanggal, `nama-sup`, `telp-sup`, `ket-sup`, total, diskon, grandtotal)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        "INSERT INTO masterpembelian (kodepb, tanggal, `kode-sup`, total, diskon, grandtotal)
+         VALUES (?, ?, ?, ?, ?, ?)"
     );
-    $stmt->bind_param('sssssddd', $kodepb, $tanggal, $supplier, $telp, $ket, $total, $diskon, $grandtotal);
+    $stmt->bind_param('sssddd', $kodepb, $tanggal, $kodesup, $total, $diskon, $grandtotal);
 
     if (!$stmt->execute()) {
         echo json_encode(['success' => false, 'error' => $stmt->error]);
@@ -56,7 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save'
 $tgl_awal  = $_GET['tgl_awal']  ?? date('Y-m-d');
 $tgl_akhir = $_GET['tgl_akhir'] ?? date('Y-m-d');
 
-$sql    = "SELECT * FROM masterpembelian WHERE 1=1";
+$sql    = "SELECT p.*, s.`nama-sup`, s.`telp-sup`, s.`ket-sup`
+        FROM masterpembelian p 
+        LEFT JOIN suppliers s ON p.`kode-sup` = s.`kode-sup` 
+        WHERE 1=1";
 $params = [];
 $types  = '';
 if ($tgl_awal  !== '') { $sql .= " AND tanggal >= ?"; $types .= 's'; $params[] = $tgl_awal;  }
@@ -131,7 +135,7 @@ while ($r = $result->fetch_assoc()) {
           </td>
           <td class="text-center"><?= htmlspecialchars($row['kodepb']) ?></td>
           <td class="text-center"><?= date('d-m-Y', strtotime($row['tanggal'])) ?></td>
-          <td class="text-center"><?= htmlspecialchars($row['nama-sup']) ?></td>
+          <td class="text-center"><?= htmlspecialchars($row['nama-sup'] ?? '') ?></td>
           <td class="text-end">Rp <?= number_format($row['grandtotal'], 0, ',', '.') ?></td>
         </tr>
         <?php endforeach; ?>
@@ -173,24 +177,14 @@ while ($r = $result->fetch_assoc()) {
               <input type="date" class="form-control" id="view-tanggal" readonly>
             </div>
           </div>
-          <div class="d-flex align-items-center mb-2">
-            <label class="col-sm-1 col-form-label">Kode Supplier:</label>
-            <div class="col-sm-2">
-              <input type="text" class="form-control" id="view-supplier" readonly>
-            </div>
-          </div>
+          
           <div class="d-flex align-items-center mb-2">
             <label class="col-sm-1 col-form-label">Nama Supplier:</label>
             <div class="col-sm-2">
               <input type="text" class="form-control" id="view-nama-supplier" readonly>
             </div>
           </div>
-          <div class="d-flex align-items-center mb-2">
-            <label class="col-sm-1 col-form-label">Kota:</label>
-            <div class="col-sm-2">
-              <input type="text" class="form-control" id="view-kota" readonly>
-            </div>
-          </div>
+          
           <div class="d-flex align-items-center mb-2">
             <label class="col-sm-1 col-form-label">No. Telp:</label>
             <div class="col-sm-2">
@@ -277,20 +271,37 @@ $(document).ready(function () {
   });
 
   $("#printdetail").click(function () {
-    const table = $("#myTable").DataTable();
-    let datatable = [];
+    var header = {
+      kodepb:       $('#view-kodepb').text(),
+      tanggal:      $('#view-tanggal').val(),
+      nama_supplier: $('#view-nama-supplier').val(),
+      telp:         $('#view-telp').val(),
+      keterangan:   $('#view-ket').val()
+    };
 
-    table.rows().every(function () {
-        const sel = $(this.node()).find("td");
-        datatable.push({
-            kode: sel.eq(1).text(),
-            tanggal: sel.eq(2).text(),
-            supplier: sel.eq(3).text(),
-            grandtotal: sel.eq(4).text()
-        });
+    var items = [];
+    $('#view-tbl-body tr').each(function () {
+      var td = $(this).find('td');
+      items.push({
+        kode:     td.eq(0).text(),
+        nama:     td.eq(1).text(),
+        satuan:   td.eq(2).text(),
+        hbeli:    td.eq(3).text().replace('Rp ', ''),
+        qty:      td.eq(4).text(),
+        subtotal: td.eq(5).text().replace('Rp ', '')
+      });
     });
 
-    const url = 'printdetailbeli.php?data=' + encodeURIComponent(JSON.stringify(datatable));
+    var footer = {
+      total:        $('#view-total').text(),
+      diskon_persen: $('#view-diskon-persen').val(),
+      diskon_nominal: $('#view-diskon-nominal').text(),
+      grandtotal:   $('#view-grandtotal').text()
+    };
+
+    var payload = { header: header, items: items, footer: footer };
+
+    const url = 'printdetailbeli.php?data=' + encodeURIComponent(JSON.stringify(payload));
     window.open(url, '_blank');
   });
 
@@ -340,10 +351,8 @@ $(document).ready(function () {
     var kodepb = $(this).data('kodepb');
 
     // Kosongkan modal sebelum diisi
-    $('#view-kodepb').text('');
-    $('#view-tanggal, #view-supplier, #view-telp').val('');
+    $('#view-tanggal').val('');
     $('#view-nama-supplier').val('');
-    $('#view-kota').val('');
     $('#view-telp').val('');
     $('#view-ket').val('');
     $('#view-tbl-body').empty();
@@ -363,15 +372,16 @@ $(document).ready(function () {
         }
 
         var m = data.master;
+        var namasup = m['nama-sup'] || m.nama;
+        var telp = m['telp-sup'] || m.telp;
+        var ket = m['ket-sup'] || m.ket;
 
         // Isi header
         $('#view-kodepb').text(m.kodepb);
         $('#view-tanggal').val(m.tanggal);
-        $('#view-supplier').val(m['kode-sup']);
-        $('#view-nama-supplier').val(m['nama-sup']);
-        $('#view-kota').val(m['kota-sup']);
-        $('#view-telp').val(m['telp-sup']);
-        $('#view-ket').val(m['ket-sup']);
+        $('#view-nama-supplier').val(namasup);
+        $('#view-telp').val(telp);
+        $('#view-ket').val(ket);
 
         // Isi baris detail tabel — field hbeli (bukan hjual)
         var rows = '';
