@@ -10,6 +10,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0"></script>
   <link href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
 </head>
 

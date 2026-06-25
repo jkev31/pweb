@@ -1,4 +1,4 @@
-
+<link rel="stylesheet" href="style.css">
 
 <div class="container mt-3">
   <h2>Daftar Produk</h2>

@@ -1,0 +1,416 @@
+/* ============================================
+   Modern UI Styles - UAS PWEB
+   ============================================ */
+
+/* --- Root Variables --- */
+:root {
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --success: #10b981;
+  --success-hover: #059669;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --info: #3b82f6;
+  --info-hover: #2563eb;
+  --dark: #1e293b;
+  --dark-hover: #0f172a;
+  --sidebar-bg: #1e293b;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --card-shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --radius: 8px;
+  --radius-lg: 12px;
+  --transition: all 0.2s ease;
+}
+
+/* --- Body & Page --- */
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: #f1f5f9;
+  color: #334155;
+  line-height: 1.6;
+}
+
+/* --- Navbar --- */
+.navbar {
+  background: linear-gradient(135deg, var(--dark) 0%, #334155 100%) !important;
+  padding: 0.6rem 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: 0.5px;
+}
+
+.navbar .nav-link {
+  font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  border-radius: 6px;
+  transition: var(--transition);
+  text-transform: capitalize;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* --- Container / Content Area --- */
+#isi {
+  padding: 1.5rem;
+}
+
+.container,
+.container-fluid {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Headings --- */
+h2, h4, h5 {
+  color: var(--dark);
+  font-weight: 700;
+}
+
+/* --- Cards (wrapping content) --- */
+.card {
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow);
+  transition: var(--transition);
+}
+
+.card:hover {
+  box-shadow: var(--card-shadow-lg);
+}
+
+/* --- Tables --- */
+.table {
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+}
+
+.table thead th {
+  background: linear-gradient(135deg, var(--dark) 0%, #334155 100%) !important;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: none;
+  padding: 0.75rem 0.75rem;
+  white-space: nowrap;
+}
+
+.table tbody tr {
+  transition: var(--transition);
+}
+
+.table tbody tr:hover {
+  background-color: #eef2ff !important;
+}
+
+.table tbody td {
+  vertical-align: middle;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.table tfoot td,
+.table tfoot th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  border-top: 2px solid #e2e8f0;
+}
+
+.table-bordered {
+  border-color: #e2e8f0;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+  background-color: rgba(0, 0, 0, 0.01);
+}
+
+/* --- Buttons --- */
+.btn {
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.4rem 1rem;
+  transition: var(--transition);
+  border: none;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background: var(--primary);
+}
+.btn-primary:hover, .btn-primary:focus {
+  background: var(--primary-hover);
+}
+
+.btn-success {
+  background: var(--success);
+}
+.btn-success:hover, .btn-success:focus {
+  background: var(--success-hover);
+}
+
+.btn-danger {
+  background: var(--danger);
+}
+.btn-danger:hover, .btn-danger:focus {
+  background: var(--danger-hover);
+}
+
+.btn-info {
+  background: var(--info);
+  color: #fff;
+}
+.btn-info:hover, .btn-info:focus {
+  background: var(--info-hover);
+  color: #fff;
+}
+
+.btn-dark {
+  background: var(--dark);
+}
+.btn-dark:hover, .btn-dark:focus {
+  background: var(--dark-hover);
+}
+
+.btn-outline-secondary {
+  border-color: #cbd5e1;
+  color: #64748b;
+}
+.btn-outline-secondary:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: var(--dark);
+}
+
+/* --- Form Controls --- */
+.form-control,
+.form-select {
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+.form-control[readonly] {
+  background-color: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #475569;
+  margin-bottom: 0.25rem;
+}
+
+.col-form-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+textarea.form-control {
+  min-height: 60px;
+  resize: vertical;
+}
+
+/* --- Modals --- */
+.modal-content {
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%);
+  color: #fff;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 1rem 1.25rem;
+  border-bottom: none;
+}
+
+.modal-header .modal-title {
+  font-weight: 600;
+  color: #fff;
+}
+
+.modal-header .btn-close {
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
+}
+
+.modal-header .btn-close:hover {
+  opacity: 1;
+}
+
+.modal-body {
+  padding: 1.25rem;
+}
+
+.modal-footer {
+  border-top: 1px solid #e2e8f0;
+  padding: 0.75rem 1.25rem;
+}
+
+/* --- Input Row (Transaksi) --- */
+#trans .row {
+  background: #fff;
+  padding: 1rem;
+  border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
+}
+
+#trans label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* --- Summary / Footer Table --- */
+#tbldata tfoot td {
+  font-size: 0.95rem;
+  font-weight: 600;
+  background-color: #f8fafc;
+}
+
+#tot, #grandtotal, #kembali {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+#diskon_nominal {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+/* --- Toolbar Area --- */
+.d-flex.gap-3 {
+  gap: 0.75rem !important;
+}
+
+/* --- DataTables Override --- */
+.dataTables_wrapper {
+  padding-top: 0.5rem;
+}
+
+div.dataTables_wrapper div.dataTables_length select,
+div.dataTables_wrapper div.dataTables_filter input {
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+div.dataTables_wrapper div.dataTables_info {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+  gap: 2px;
+}
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination .page-link {
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.7rem;
+  transition: var(--transition);
+}
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination .page-item.active .page-link {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination .page-link:hover {
+  background: #eef2ff;
+  color: var(--primary);
+}
+
+/* --- Page Title --- */
+h2, h4.fw-bold {
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+h2::after, h4.fw-bold::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40px;
+  height: 3px;
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+/* --- Scrollbar --- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* --- Badge / Info text --- */
+.text-muted {
+  color: #94a3b8 !important;
+}
+
+/* --- Print / Excel Button in toolbar --- */
+#savepembelian button,
+#savepenjualan button {
+  font-size: 0.85rem;
+}
+
+/* --- Chart Section (Dashboard) --- */
+canvas {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow);
+  padding: 1rem;
+}
