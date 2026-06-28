@@ -163,7 +163,7 @@ while ($r = $result->fetch_assoc()) {
       <div class="modal-header">
         <h5 class="modal-title" id="modalViewLabel">
           Detail Penjualan &mdash;
-          <span id="view-kodepj" class="text-primary fw-bold"></span>
+          <span id="view-kodepj" class="fw-bold"></span>
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -263,11 +263,11 @@ $(document).ready(function () {
             konsumen: sel.eq(3).text(),
             grandtotal: sel.eq(4).text()
         });
-    });
+      });
 
     const url = 'printpenjualan.php?data=' + encodeURIComponent(JSON.stringify(datatable));
     window.open(url, '_blank');
-});
+  });
 
   $("#excelpenjualan").click(function () {
     const table = $("#myTable").DataTable();
@@ -322,7 +322,7 @@ $(document).ready(function () {
 
     const url = 'printdetailjual.php?data=' + encodeURIComponent(JSON.stringify(payload));
     window.open(url, '_blank');
-});
+  });
 
   $('#myTable').DataTable({
       pageLength: 10,
@@ -334,7 +334,7 @@ $(document).ready(function () {
       language: {
         emptyTable: 'Tidak ada data penjualan.'
       }
-    });
+  });
 
   /* ── Helper: muat halaman ke #isi (SPA) atau navigasi langsung ── */
   function loadPage(url) {

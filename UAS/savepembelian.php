@@ -164,7 +164,7 @@ while ($r = $result->fetch_assoc()) {
       <div class="modal-header">
         <h5 class="modal-title" id="modalViewLabel">
           Detail Pembelian &mdash;
-          <span id="view-kodepb" class="text-primary fw-bold"></span>
+          <span id="view-kodepb" class="fw-bold"></span>
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -334,7 +334,9 @@ $(document).ready(function () {
       scrollX: true,
       scrollY: 200,
       responsive: true,
-      
+      language: {
+        emptyTable: 'Tidak ada data pembelian.'
+      }
     });
 
   /* ── Helper: muat halaman ke #isi (SPA) atau navigasi langsung ── */
