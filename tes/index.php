@@ -18,9 +18,6 @@ while ($row = $result->fetch_assoc()) {
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/jquery.min.js"></script>
-  <link href="DataTables/datatables.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <script src="DataTables/dataTables.min.js"></script>
 </head>
 <body>
   <div id="isi">
