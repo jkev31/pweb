@@ -19,7 +19,12 @@
         <input type="number" class="form-control" id="diskon" placeholder="Enter diskon">
       </div>
       <div class="mb-3">
-        <input type="text" class="form-control" id="gudang" placeholder="Enter gudang">
+      <select class="form-select" id="gudang">
+      <option value="" disabled selected>Pilih Gudang</option>
+      <option value="A">Gudang A</option>
+      <option value="B">Gudang B</option>
+      <option value="C">Gudang C</option>
+      </select>
       </div>
       <div class="d-flex gap-2">
         <button class="btn btn-success" id="btn-save">Save</button>
@@ -36,42 +41,46 @@ $(document).ready(function () {
     $('#isi').load(url);
   }
 
+  
+
+  
+
   $('#btn-back').on('click', function () {
     loadPage('index.php');
   });
 
-  $('#btn-save').on('click', function () {
-    var kodepr = $('#kodepr').val().trim();
-    var namapr = $('#namapr').val().trim();
-    var satuan = $('#satuan').val().trim();
-    var harga  = $('#harga').val();
-    var diskon = $('#diskon').val();
-    var gudang = $('#gudang').val().trim();
+  $("#btn-save").click(function(){
+     var formdata = new FormData();
+     formdata.append('kodepr',$("#kodepr").val());
+     formdata.append('namapr',$("#namapr").val());
+     formdata.append('satuan',$("#satuan").val());
+     formdata.append('harga',$("#harga").val());
+     formdata.append('diskon',$("#diskon").val());
+     formdata.append('gudang',$("#gudang").val());
 
-    if (!kodepr) { alert('Kode harus diisi!'); return; }
-    if (!namapr) { alert('Nama harus diisi!'); return; }
+     if ($("#kodepr").val() == '') {
+        alert ('kode masih kosong!');
+        return;
+     }
 
-    $.ajax({
-      url: 'index.php',
-      method: 'POST',
-      data: {
-        action: 'save', kodepr: kodepr, namapr: namapr,
-        satuan: satuan, harga: harga, diskon: diskon, gudang: gudang
-      },
-      dataType: 'json',
-      success: function (res) {
-        if (res.success) {
-          alert('Produk berhasil ditambahkan!');
-          loadPage('index.php');
-        } else {
-          alert('Gagal: ' + (res.error || 'Unknown'));
+     $.ajax({
+        type: 'POST',
+        url: 'insertprdk.php',
+        data: formdata,
+        processData:false,
+        contentType:false,
+        success: function(response) {
+            console.log('Sukses:', response);
+            alert('Data berhasil dikirim!');
+            window.location.href = "index.php";
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
         }
-      },
-      error: function () {
-        alert('Terjadi kesalahan koneksi.');
-      }
     });
-  });
+
+
+});
 
 });
 </script>

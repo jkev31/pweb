@@ -1,64 +1,5 @@
 <?php
 include 'connect.php';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save') {
-    header('Content-Type: application/json');
-
-    $kode   = $_POST['kodepr'] ?? '';
-    $nama   = $_POST['namapr'] ?? '';
-    $satuan = $_POST['satuan'] ?? '';
-    $harga  = (float)($_POST['harga']    ?? 0);
-    $diskon = (float)($_POST['diskon']   ?? 0);
-    $gudang = $_POST['gudang'] ?? '';
-
-    $stmt = $conn->prepare("INSERT INTO items (kodepr, namapr, satuan, harga, diskon, gudang) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param('sssdds', $kode, $nama, $satuan, $harga, $diskon, $gudang);
-
-    if (!$stmt->execute()) {
-        echo json_encode(['success' => false, 'error' => $stmt->error]);
-        exit;
-    }
-    echo json_encode(['success' => true]);
-    exit;
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'update') {
-    header('Content-Type: application/json');
-
-    $kode   = $_POST['kodepr'] ?? '';
-    $nama   = $_POST['namapr'] ?? '';
-    $satuan = $_POST['satuan'] ?? '';
-    $harga  = (float)($_POST['harga']    ?? 0);
-    $diskon = (float)($_POST['diskon']   ?? 0);
-    $gudang = $_POST['gudang'] ?? '';
-
-    $stmt = $conn->prepare("UPDATE items SET namapr=?, satuan=?, harga=?, diskon=?, gudang=? WHERE kodepr=?");
-    $stmt->bind_param('ssddss', $nama, $satuan, $harga, $diskon, $gudang, $kode);
-
-    if (!$stmt->execute()) {
-        echo json_encode(['success' => false, 'error' => $stmt->error]);
-        exit;
-    }
-    echo json_encode(['success' => true]);
-    exit;
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete') {
-    header('Content-Type: application/json');
-
-    $kode = $_POST['kodepr'] ?? '';
-
-    $stmt = $conn->prepare("DELETE FROM items WHERE kodepr=?");
-    $stmt->bind_param('s', $kode);
-
-    if (!$stmt->execute()) {
-        echo json_encode(['success' => false, 'error' => $stmt->error]);
-        exit;
-    }
-    echo json_encode(['success' => true]);
-    exit;
-}
-
 $sql = "SELECT * FROM items ORDER BY kodepr";
 $result = $conn->query($sql);
 $rows = [];
@@ -66,6 +7,7 @@ while ($row = $result->fetch_assoc()) {
     $rows[] = $row;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

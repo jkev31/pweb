@@ -3,8 +3,9 @@ include "connect.php";
 $kode = $_POST['kodepr'];
 $nama = $_POST['namapr'];
 $satuan = $_POST['satuan'];
-$hbeli = $_POST['hbeli'];
-$hjual = $_POST['hjual'];
+$harga = $_POST['harga'];
+$diskon = $_POST['diskon'];
+$gudang = $_POST['gudang'];
 
 $sql = "delete from items
 where kodepr = '$kode'";

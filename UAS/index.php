@@ -11,6 +11,7 @@
   <script src="js/jquery.min.js"></script>
   <script src="js/chart.js"></script>
   <link href="DataTables/datatables.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="DataTables/dataTables.min.js"></script>
 </head>
